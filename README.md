@@ -8,7 +8,43 @@ SpringBoot + Vue + MySQL
 
 
 
-#### 使用说明
+#### git使用说明
+
+**分支情况**
+
+![image-20221026112237412](C:\Users\yiyonghao\AppData\Roaming\Typora\typora-user-images\image-20221026112237412.png)
+
+main：主分支，连接远程主分支，**不能修改**，只能pull和push，
+
+yiyonghao：开发人员分支，git commit上传到这个分支，使用该分支进行开发。
+
+remotes/origin/HEAD -> origin/main，远程分支和本地最新仓库连接
+
+
+**开发过程**
+
+```shell
+# 1. 创建本地新分支，并切换到该新分支
+git checkout -b yiyonghao
+# 若已经存在，则切换到该分支即可
+git checkout yiyonghao
+
+# 2. 开发过程。。。
+
+
+# 3. 上传开发代码到本地开发人员分支
+git add .
+git commit -m "this is a message"
+
+# 4. 切换主分支，先合并其他人上传的新代码
+git checkout main
+git pull --rebase
+
+# 5. 合并本地开发分支和主分支，并上传新代码
+git merge yiyonghao
+git push
+```
+
 
 1.  xxxx
 
