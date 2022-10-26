@@ -64,7 +64,9 @@ git push
 ![输入图片说明](images/git_commit.png)
 
  **3. 合并主分支和本地开发分支** 
+
 ！！！合并之前注意检查，主分支是否与远程分支同步！！！
+
 选择开发分支
 
 ![输入图片说明](images/git_merge.png)
@@ -73,7 +75,14 @@ git push
 
 ![输入图片说明](images/git_push.png)
 
+ **5. reset**
+若忘记同步远程代码就merge新的修改代码，且未push到远程，可以使用reset，使用```HEAD^```表示回退到上一个版本。
 
+![输入图片说明](images/git_reset.png) 
+
+![输入图片说明](images/git_reset_2.png)
+
+在回退后使用pull合并远程后，再merge。
 
 1.  xxxx
 
