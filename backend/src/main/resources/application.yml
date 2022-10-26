@@ -1,0 +1,16 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.106.128.165:3306/mltds?serverTimezone=GMT%2b8
+    username: root
+    password: kuanguang
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
