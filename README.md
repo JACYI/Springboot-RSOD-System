@@ -41,6 +41,30 @@ git merge yiyonghao
 git push
 ```
 
+## IDEA 开发使用说明
+
+参考文档：
+- https://blog.csdn.net/jdsaiasodh/article/details/124667680
+- https://blog.csdn.net/weixin_43252521/article/details/123959391
+
+
+ **1.1 创建本地新分支** 
+![输入图片说明](imags/git_checkout.png.png)
+
+
+ **1.2 切换分支** 
+![输入图片说明](imags/git_branch1.png)
+
+ **2. commit新代码** 
+选择commit的文件，填写commit message，并点击commit， **不要点击commit & push** 。
+![输入图片说明](imags/git_commit.png)
+
+ **3. 合并主分支和本地开发分支** 
+选择开发分支
+![输入图片说明](imags/git_merge.png)
+
+ **4. push** 
+![输入图片说明](imags/git_push.png)
 
 1.  xxxx
 
