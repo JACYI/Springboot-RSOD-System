@@ -8,7 +8,7 @@ SpringBoot + Vue + MySQL
 
 **分支情况**
 
-![输入图片说明](imagesgit_1.png.png)
+![输入图片说明](images/git_1.png)
 
 main：主分支，连接远程主分支，**不能修改**，只能pull和push，
 
@@ -50,28 +50,28 @@ git push
 
  **1.1 创建本地新分支** 
 
-![输入图片说明](imags/git_checkout.png.png)
+![输入图片说明](images/git_checkout.png.png)
 
 
  **1.2 切换分支** 
 
-![输入图片说明](imags/git_branch1.png)
+![输入图片说明](images/git_branch1.png)
 
  **2. commit新代码** 
 
 选择commit的文件，填写commit message，并点击commit， **不要点击commit & push** 。
 
-![输入图片说明](imags/git_commit.png)
+![输入图片说明](images/git_commit.png)
 
  **3. 合并主分支和本地开发分支** 
 
 选择开发分支
 
-![输入图片说明](imags/git_merge.png)
+![输入图片说明](images/git_merge.png)
 
  **4. push** 
 
-![输入图片说明](imags/git_push.png)
+![输入图片说明](images/git_push.png)
 
 
 
