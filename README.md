@@ -32,7 +32,7 @@ git checkout yiyonghao
 git add .
 git commit -m "this is a message"
 
-# 4. 切换主分支，先合并其他人上传的新代码
+# 4. 切换主分支，!!!先合并其他人上传的新代码!!!!
 git checkout main
 git pull --rebase
 
@@ -64,7 +64,7 @@ git push
 ![输入图片说明](images/git_commit.png)
 
  **3. 合并主分支和本地开发分支** 
-
+！！！合并之前注意检查，主分支是否与远程分支同步！！！
 选择开发分支
 
 ![输入图片说明](images/git_merge.png)
