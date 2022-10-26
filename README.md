@@ -12,7 +12,7 @@ SpringBoot + Vue + MySQL
 
 **分支情况**
 
-![image-20221026112237412](C:\Users\yiyonghao\AppData\Roaming\Typora\typora-user-images\image-20221026112237412.png)
+![输入图片说明](imagesgit_1.png.png)
 
 main：主分支，连接远程主分支，**不能修改**，只能pull和push，
 
