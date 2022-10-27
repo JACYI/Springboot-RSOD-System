@@ -1,12 +1,12 @@
 package com.learning.mltds.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * <p>
@@ -19,6 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
   @TableName("mltds_user")
+@ToString
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,14 +31,19 @@ public class User implements Serializable {
 
     private String password;
 
+    @TableField(insertStrategy = FieldStrategy.DEFAULT)
     private Integer authority;
+
 
     private LocalDateTime lastLoginTime;
 
+    @TableField(insertStrategy = FieldStrategy.DEFAULT)
     private Integer isDeleted;
 
+    @TableField(insertStrategy = FieldStrategy.DEFAULT, updateStrategy = FieldStrategy.NEVER)
     private LocalDateTime createTime;
 
+    @TableField(updateStrategy = FieldStrategy.NEVER)
     private LocalDateTime updateTime;
 
 

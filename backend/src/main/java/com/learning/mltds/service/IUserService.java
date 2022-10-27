@@ -1,5 +1,6 @@
 package com.learning.mltds.service;
 
+import com.learning.mltds.controller.dto.UserDTO;
 import com.learning.mltds.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserService extends IService<User> {
 
+    boolean login(UserDTO userDTO);
 }

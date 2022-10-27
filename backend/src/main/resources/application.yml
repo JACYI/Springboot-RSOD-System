@@ -1,6 +1,14 @@
 server:
   port: 9090
+  # 设置 request.session 过期时间
+  servlet:
+    session:
+      timeout: PT24H
+
+
 spring:
+  redis:
+    timeout: 5000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://10.106.128.165:3306/mltds?serverTimezone=GMT%2b8
@@ -13,4 +21,6 @@ mybatis:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
 
