@@ -90,8 +90,14 @@ git push
 
 ### Backend
 
-**UserContoller login/logout**: 缺少对session的处理，返回值是boolean，缺少返回注册成功的id号的逻辑
-
+|  前端请求路径  | 进度 |                       备注                        |
+| :------------: | :--: | :-----------------------------------------------: |
+|  user/login/   | Done |                缺少对session的处理                |
+|  user/logout/  | Done |                缺少对session的处理                |
+| user/register/ | Done | 缺少对session的处理，缺少返回注册成功的id号的逻辑 |
+|   file-menu/   | Done |                                                   |
+|                |      |                                                   |
+|                |      |                                                   |
 
 
 
