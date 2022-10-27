@@ -84,7 +84,15 @@ git push
 
 在回退后使用pull合并远程后，再merge。
 
-1.  xxxx
+
+
+## 开发记录
+
+### Backend
+
+**UserContoller login/logout**: 缺少对session的处理，返回值是boolean，缺少返回注册成功的id号的逻辑
+
+
 
 
 #### 参与贡献

@@ -65,22 +65,31 @@ public class UserController {
 
     // 用户登录
     @PostMapping("/login/=")
-    public boolean login(@RequestBody UserDTO userDTO) {
-        String username = userDTO.getUsername();
-        String password = userDTO.getPassword();
+    public boolean login(@RequestBody User user) {
+        String username = user.getName();
+        String password = user.getPassword();
 
         if(StrUtil.isBlank(username) || StrUtil.isBlank(password)){
             return false;
         }
 
-        return userService.login(userDTO);
+        return userService.login(user);
     }
     // 用户退出登录
-//    @PostMapping("/logout/")
-//    public boolean logout(@RequestHeader HttpSession session) {
-//        session.invalidate();
-//        return true;
-//    }
+    @PostMapping("/logout/")
+    public boolean logout(@RequestHeader HttpSession session) {
+        session.invalidate();
+        return true;
+    }
+    // 用户注册
+    @PostMapping("/register/")
+    public boolean registerUser(@RequestBody User user) {
+        String username = user.getName();
+        String password = user.getPassword();
+        if(StrUtil.isBlank(username) || StrUtil.isBlank(password))
+            return false;
+        return this.save(user);
+    }
 
 
 }

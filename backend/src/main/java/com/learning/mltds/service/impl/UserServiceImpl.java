@@ -20,10 +20,10 @@ import java.time.LocalDateTime;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
-    public boolean login(UserDTO userDTO) {
+    public boolean login(User one) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("name", userDTO.getUsername());
-        queryWrapper.eq("password", userDTO.getPassword());
+        queryWrapper.eq("name", one.getName());
+        queryWrapper.eq("password", one.getPassword());
         User user = getOne(queryWrapper);
         if (user != null){
             System.out.println("login success");

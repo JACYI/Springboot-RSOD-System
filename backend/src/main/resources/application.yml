@@ -8,6 +8,8 @@ server:
 
 spring:
   redis:
+    host: 10.106.128.165
+    port: 6379
     timeout: 5000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
