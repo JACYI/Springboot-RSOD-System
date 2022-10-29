@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.learning.mltds.controller.dto.UserDTO;
 import com.learning.mltds.utils.JwtUtil;
 import com.learning.mltds.utils.ResUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.learning.mltds.service.IUserService;
 import com.learning.mltds.entity.User;
@@ -32,12 +34,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     @Resource
     private IUserService userService;
-
     @Resource
     private JwtUtil jwtUtil;
-
     @Resource
     private ResUtils resUtils;
+//    private final Logger logger = (Logger) LoggerFactory.getLogger(getClass());
+
 
     @PostMapping
     public Boolean save(@RequestBody User user) {
@@ -76,8 +78,11 @@ public class UserController {
     // 用户登录
     @PostMapping("/login/")
     public Map<String, Object> login(@RequestBody Map<String, Object>requestBody, HttpSession httpSession) {
+
         String username = (String)requestBody.get("username");
         String password = (String)requestBody.get("password");
+
+//        logger.info("user " + username + "请求登录");
 
         if(StrUtil.isBlank(username) || StrUtil.isBlank(password))
             return resUtils.makeResponse("Username or password error", "用户名或密码错误");;

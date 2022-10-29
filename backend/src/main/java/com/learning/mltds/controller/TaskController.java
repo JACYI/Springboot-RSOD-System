@@ -1,11 +1,14 @@
 package com.learning.mltds.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.learning.mltds.entity.Imageinfo;
 import com.learning.mltds.entity.Task;
 import com.learning.mltds.entity.User;
+import com.learning.mltds.service.IImageinfoService;
 import com.learning.mltds.service.ITaskService;
 import com.learning.mltds.utils.ResUtils;
 import org.springframework.stereotype.Controller;
@@ -30,6 +33,8 @@ import java.util.Map;
 public class TaskController {
     @Resource
     private ITaskService taskService;
+    @Resource
+    private IImageinfoService imageinfoService;
 
     @Resource
     private ResUtils resUtils;
@@ -142,6 +147,7 @@ public class TaskController {
 
     }
 
+    // 中止任务
     @PostMapping("stop/")
     public Map<String, Object> stopTask(@RequestBody Map<String, Object> requestBody) {
         Integer taskId = (Integer) requestBody.get("task_id");
@@ -165,6 +171,25 @@ public class TaskController {
         taskService.update(updateWrapper);
         return resUtils.makeResponse("任务已经中止");
     }
+
+//    // 查看检测结果
+//    @PostMapping("{id}/")
+//    public Map<String, Object> getTask(@PathVariable("id") Integer taskId) {
+//        Task task = taskService.getById(taskId);
+//        Map<String, Object> result = null;
+//
+//        if(task.getStatus().equals("SUCCESS")){
+//            // 如果是检测识别结果，就从image_info中读数据
+//            if(task.getCategory().equals("detection")) {
+//                QueryWrapper<Imageinfo> queryWrapper = new QueryWrapper<>();
+//                queryWrapper.eq("task_id", taskId);
+//                result = imageinfoService.getMap(queryWrapper);
+//            }
+//            // 尚未确认结果的任务，转换result为json格式
+//            if(!task.getCode().equals("") && task.getCode() != null && result != null)
+//
+//        }
+//    }
 
 
 }

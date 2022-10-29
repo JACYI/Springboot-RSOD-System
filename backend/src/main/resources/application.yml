@@ -24,5 +24,9 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-
+# 日志文件
+logging:
+  config: C:\Users\yiyonghao\SpringbootProject\bs\backend\src\main\resources\Spring-logback.xml
+  file:
+    name: C:\Users\yiyonghao\SpringbootProject\bs\backend\src\log
 
