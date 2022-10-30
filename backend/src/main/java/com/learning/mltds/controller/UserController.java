@@ -36,8 +36,6 @@ public class UserController {
     private IUserService userService;
     @Resource
     private JwtUtil jwtUtil;
-    @Resource
-    private ResUtils resUtils;
 //    private final Logger logger = (Logger) LoggerFactory.getLogger(getClass());
 
 
@@ -85,7 +83,7 @@ public class UserController {
 //        logger.info("user " + username + "请求登录");
 
         if(StrUtil.isBlank(username) || StrUtil.isBlank(password))
-            return resUtils.makeResponse("Username or password error", "用户名或密码错误");;
+            return ResUtils.makeResponse("Username or password error", "用户名或密码错误");;
 
         List<User> users = userService.listByMap(new HashMap<String, Object>(){{put("name", username);}});
 
@@ -100,13 +98,13 @@ public class UserController {
                 String token = jwtUtil.sign(user.getName(), user.getId().toString());
                 result.put("token", token);
                 result.put("username", user.getName());
-                resultMap = resUtils.makeResponse(result);
+                resultMap = ResUtils.makeResponse(result);
                 System.out.println("用户"+user.getName()+"已登录");
             } else {
-                resultMap = resUtils.makeResponse("Password error!", "密码错误");
+                resultMap = ResUtils.makeResponse("Password error!", "密码错误");
             }
         }else
-            resultMap = resUtils.makeResponse("Username error", "找不到用户");
+            resultMap = ResUtils.makeResponse("Username error", "找不到用户");
 
         httpSession.setAttribute("loginUser", username);
 

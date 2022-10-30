@@ -7,6 +7,8 @@ server:
 
 
 spring:
+  main:
+    allow-circular-references: true
   redis:
     host: 10.106.128.165
     port: 6379
@@ -16,6 +18,27 @@ spring:
     url: jdbc:mysql://10.106.128.165:3306/mltds?serverTimezone=GMT%2b8
     username: root
     password: kuanguang
+#  rabbitmq:
+#    host: 10.106.128.116
+#    port: 5672
+#    username: yiyonghao
+#    password: yiyonghao
+#    virtual-host: vhost
+#    listener:
+#      simple:
+#        #acknowledge-mode: manual #设置确认模式手工确认
+#        concurrency: 3 #消费者最小数量
+#        max-concurrency: 10 # 消费者最大数量
+    # 如果consumer需要发送消息给服务器，则需要配置template
+#    template:
+#      retry:
+#        enabled: true
+#        initial-interval: 10000ms
+#        max-interval: 300000ms
+#        multiplier: 2
+#      exchange: topic.exchange
+#      publisher-confirms: true
+
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
 #  configuration:

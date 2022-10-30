@@ -10,6 +10,7 @@ import com.learning.mltds.entity.Task;
 import com.learning.mltds.entity.User;
 import com.learning.mltds.service.IImageinfoService;
 import com.learning.mltds.service.ITaskService;
+import com.learning.mltds.service.rabbitmq.GetTaskFromRabbitMq;
 import com.learning.mltds.utils.ResUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,9 @@ public class TaskController {
     @Resource
     private ITaskService taskService;
     @Resource
-    private IImageinfoService imageinfoService;
+    private IImageinfoService iImageinfoService;
+    @Resource
+    private GetTaskFromRabbitMq getTaskFromRabbitMq;
 
     @Resource
     private ResUtils resUtils;
@@ -172,24 +175,46 @@ public class TaskController {
         return resUtils.makeResponse("任务已经中止");
     }
 
-//    // 查看检测结果
-//    @PostMapping("{id}/")
-//    public Map<String, Object> getTask(@PathVariable("id") Integer taskId) {
-//        Task task = taskService.getById(taskId);
-//        Map<String, Object> result = null;
-//
-//        if(task.getStatus().equals("SUCCESS")){
-//            // 如果是检测识别结果，就从image_info中读数据
-//            if(task.getCategory().equals("detection")) {
-//                QueryWrapper<Imageinfo> queryWrapper = new QueryWrapper<>();
-//                queryWrapper.eq("task_id", taskId);
-//                result = imageinfoService.getMap(queryWrapper);
-//            }
-//            // 尚未确认结果的任务，转换result为json格式
-//            if(!task.getCode().equals("") && task.getCode() != null && result != null)
-//
-//        }
-//    }
+    // 查看检测结果
+    @PostMapping("{id}/")
+    public Map<String, Object> getTask(@PathVariable("id") Integer taskId) {
+        Task task = taskService.getById(taskId);
+        Map<String, Object> taskResult = null;
+
+        if(task.getStatus().equals("SUCCESS")){
+            // 如果是检测识别结果，就从image_info中读数据，如果没有数据
+            if(task.getCategory().equals("detection")) {
+                Map<String, Object> databaseResult = iImageinfoService.getDetectionImagesByTaskId(taskId);
+                if (!databaseResult.isEmpty())
+                    taskResult = databaseResult;
+            }
+            // 对于数据库中没有，即尚未确认结果的任务，从rabbitmq中读取消息
+            if(taskResult == null && task.getCode() != null && !task.getCode().equals("")){
+                // 任务成功有code, 根据code查询消息, 注意需要去除将code中的横杠
+                String code = task.getCode();
+                code = code.replace("-", "");
+                Map<String, Object> rabbitmqResult = getTaskFromRabbitMq.getMessage(code, code);
+
+//                System.out.println("Code: " + code);
+
+                if (rabbitmqResult == null){
+                    // 查询不到消息，则rabbitmq中结果过期了
+                    task.setStatus("FAILURE");
+                    task.setInfo("结果未确认，已过期");
+                    taskService.update();
+                } else {
+                    taskResult = rabbitmqResult;
+                }
+            }
+        }
+
+        Map<String, Object> response = null;
+        if(taskResult == null)
+            response = taskService.makeTaskResult(task);
+        else
+            response = taskService.makeTaskResult(task, taskResult);
+        return ResUtils.makeResponse(response);
+    }
 
 
 }
