@@ -1,5 +1,6 @@
 package com.learning.mltds.utils;
 
+import com.learning.mltds.vo.ObjectinfoVO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -33,6 +34,20 @@ public class ResUtils {
     public static Map<String, Object> makeResponse(Object result){
         Map<String, Object> resultsMap = new HashMap<>();
         resultsMap.put("result", result);
+        resultsMap.put("message", "");
+        resultsMap.put("status", "OK");
+
+        return resultsMap;
+    }
+
+    public static Map<String, Object> makeResponse(List<ObjectinfoVO> objectinfoVOS, Long pageNums){
+        Map<String, Object> resultsMap = new HashMap<>();
+
+        Map<String, Object> searchResultMap = new HashMap<>();
+        searchResultMap.put("search_result", objectinfoVOS);
+        searchResultMap.put("pages", pageNums);
+
+        resultsMap.put("result", searchResultMap);
         resultsMap.put("message", "");
         resultsMap.put("status", "OK");
 

@@ -4,6 +4,10 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.learning.mltds.vo.ObjectinfoVO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +19,7 @@ import lombok.Setter;
  * @author root
  * @since 2022-10-26
  */
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Getter
 @Setter
   @TableName("mltds_objectinfo")
@@ -92,5 +97,32 @@ public class Objectinfo implements Serializable {
 
     private Integer taskId;
 
+    public ObjectinfoVO convert2VO() {
+        return ObjectinfoVO.builder()
+                .confidence(confidence)
+                .classname(classname)
+                .typename(typename)
+                .shipNumber(shipNumber)
+                .detectedTime(detectedTime)
+                .imageCenter(coord2String(imageCenterX, imageCenterY))
+                .geoCenter(coord2String(geoCenterLongitude, geoCenterLatitude))
 
+                .bboxP1(coord2String(bboxP1X, bboxP1Y))
+                .bboxP2(coord2String(bboxP2X, bboxP2Y))
+                .bboxP3(coord2String(bboxP3X, bboxP3Y))
+                .bboxP4(coord2String(bboxP4X, bboxP4Y))
+
+                .geoBboxP1(coord2String(geoBboxP1X, geoBboxP1Y))
+                .geoBboxP2(coord2String(geoBboxP2X, geoBboxP2Y))
+                .geoBboxP3(coord2String(geoBboxP3X, geoBboxP3Y))
+                .geoBboxP4(coord2String(geoBboxP4X, geoBboxP4Y))
+
+                .targetSlicePath(targetSlicePath)
+                .areaSlicePath(areaSlicePath)
+                .build();
+    }
+
+    public <T> String coord2String(T coordX, T coordY) {
+        return '(' + coordX.toString() + ',' + coordX.toString() + ')';
+    }
 }

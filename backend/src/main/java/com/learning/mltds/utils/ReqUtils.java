@@ -3,6 +3,7 @@ package com.learning.mltds.utils;
 import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ImageinfoDTO;
 import com.learning.mltds.dto.ObjectinfoDTO;
+import com.learning.mltds.dto.SearchConditionDTO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +13,9 @@ import java.util.Map;
 
 // 前端解析工具
 public class ReqUtils {
-//    private static final DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    // detectionResult 转换成DTO对象
     public static List<DetectionResultDTO> detectionResultsConvert(Map<String, Object> detectionResults) {
         // 返回值初始化
         List<DetectionResultDTO> detectionResultDTOS = new ArrayList<>();
@@ -98,7 +101,37 @@ public class ReqUtils {
         return detectionResultDTOS;
     }
 
-    // 转换工具
+    public static SearchConditionDTO searchConditionConvert(Object conditions) {
+        Map<String, Object> form = (Map<String, Object>) conditions;
+        MapUtils.removeEmptyMap(form);
+        SearchConditionDTO conditionDTO = SearchConditionDTO.builder()
+                .filename((String) form.getOrDefault("filename", null))
+                .confidenceGte((Double) form.getOrDefault("confidence__gte", null))
+                .confidenceLte((Double) form.getOrDefault("confidence__lte", null))
+                .classname((String) form.getOrDefault("classname", null))
+                .typename((String) form.getOrDefault("typename", null))
+
+//                .detectedTimeGte(LocalDateTime.parse((String) form.getOrDefault("detected_time__gte", ""), localDateTimeFormatter))
+//                .detectedTimeLte(LocalDateTime.parse((String) form.getOrDefault("detected_time__lte", ""), localDateTimeFormatter))
+                .detectedTimeGte((String) form.getOrDefault("detected_time__gte", ""))
+                .detectedTimeLte((String) form.getOrDefault("detected_time__lte", ""))
+
+                .imageCenterXGte((Integer) form.getOrDefault("image_center_x__gte", null))
+                .imageCenterXLte((Integer) form.getOrDefault("image_center_x__lte", null))
+                .imageCenterYGte((Integer) form.getOrDefault("image_center_y__gte", null))
+                .imageCenterYLte((Integer) form.getOrDefault("image_center_y__lte", null))
+
+                .geoCenterLongitudeGte((Double) form.getOrDefault("geo_center_longitude__gte", null))
+                .geoCenterLongitudeLte((Double) form.getOrDefault("geo_center_longitude__lte", null))
+                .geoCenterLatitudeGte((Double) form.getOrDefault("geo_center_latitude__gte", null))
+                .geoCenterLatitudeLte((Double) form.getOrDefault("geo_center_latitude__lte", null))
+
+                .identifier((String) form.getOrDefault("identifier", null))
+                .build();
+        return conditionDTO;
+    }
+
+    // 坐标转换工具
     public static void turnObjectInfoSepcialValue(Map<String, Object> objectInfo) {
         if(objectInfo.containsKey("bbox")){
             List<Integer> bbox = (List<Integer>) objectInfo.get("bbox");
@@ -150,4 +183,6 @@ public class ReqUtils {
             }
         }
     }
+
+
 }

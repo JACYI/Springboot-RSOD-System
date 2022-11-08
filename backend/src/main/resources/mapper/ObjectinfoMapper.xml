@@ -113,4 +113,46 @@
 <!--    <insert id="saveObjectInfoDTO" parameterType="com.learning.mltds.dto.ObjectinfoDTO">-->
 <!--        insert into mltds_objectinfo (imageId, taskId, confidence, classname, typename, shipNumber, isDeleted)-->
 <!--    </insert>-->
+<!--    <select id="searchObjectinfo" resultType="com.learning.mltds.entity.Objectinfo">-->
+<!--        SELECT * FROM mltds_objectinfo obj LEFT JOIN mltds_task task ON obj.task_id = task.id-->
+<!--        <where>-->
+<!--            <if test="condition.getFilename != null">-->
+<!--                and obj.=#{condition.getFilename}-->
+<!--            </if>-->
+<!--&lt;!&ndash;            <if test="condition.getConfidenceGte != null || condition.getConfidenceGte != null">&ndash;&gt;-->
+<!--&lt;!&ndash;                and obj.filename=#{condition.getFilename}&ndash;&gt;-->
+<!--&lt;!&ndash;            </if>&ndash;&gt;-->
+<!--            <if test="condition.getClassname != null">-->
+<!--                and obj.classname=#{condition.getClassname}-->
+<!--            </if>-->
+<!--&lt;!&ndash;            <if test="condition.getClassname != null">&ndash;&gt;-->
+<!--&lt;!&ndash;                and obj.classname=#{condition.getClassname}&ndash;&gt;-->
+<!--&lt;!&ndash;            </if>&ndash;&gt;-->
+<!--        </where>-->
+<!--        LIMIT #{limitFirst}, #{limitSecond}-->
+<!--    </select>-->
+
+    <select id="getAllPage" resultType="com.learning.mltds.entity.Objectinfo">
+        SELECT * FROM mltds_objectinfo obj
+        LEFT JOIN mltds_task task ON obj.task_id = task.id
+        LEFT JOIN mltds_imageinfo img ON img.id = obj.image_id
+            <where>
+                obj.is_deleted = 0
+                <if test="condition.filename != null">
+                    and filename=#{condition.filename}
+                </if>
+                <!--            <if test="condition.getConfidenceGte != null || condition.getConfidenceGte != null">-->
+                <!--                and obj.filename=#{condition.getFilename}-->
+                <!--            </if>-->
+                <if test="condition.classname != null">
+                    and obj.classname=#{condition.classname}
+                </if>
+                <!--            <if test="condition.getClassname != null">-->
+                <!--                and obj.classname=#{condition.getClassname}-->
+                <!--            </if>-->
+            </where>
+        <if test="order == true">
+            ORDER BY obj.id DESC
+        </if>
+    </select>
 </mapper>

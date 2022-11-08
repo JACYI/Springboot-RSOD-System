@@ -1,8 +1,10 @@
 package com.learning.mltds.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.learning.mltds.entity.Task;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +16,6 @@ import java.util.Map;
  * @since 2022-10-26
  */
 public interface ITaskService extends IService<Task> {
-    public Map<String, Object> makeTaskResult(Task task);
-    public Map<String, Object> makeTaskResult(Task task, Map<String, Object> taskResult);
+    Map<String, Object> makeTaskResult(Task task);
+    Map<String, Object> makeTaskResult(Task task, Map<String, Object> taskResult);
 }

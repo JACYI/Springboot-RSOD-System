@@ -1,12 +1,17 @@
 package com.learning.mltds.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.mltds.dto.ObjectinfoDTO;
+import com.learning.mltds.dto.SearchConditionDTO;
 import com.learning.mltds.entity.Objectinfo;
+import com.learning.mltds.entity.Task;
 import com.learning.mltds.mapper.ObjectinfoMapper;
 import com.learning.mltds.service.IObjectinfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learning.mltds.utils.MapUtils;
+import com.learning.mltds.vo.ObjectinfoVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,6 +36,16 @@ public class ObjectinfoServiceImpl extends ServiceImpl<ObjectinfoMapper, Objecti
             objectinfoMapper.saveObjectInfo(MapUtils.entityToMap(objectinfoDTO));
         }
         return true;
+    }
+
+    @Override
+    public IPage<Objectinfo> pageSearch(IPage<Objectinfo> page, SearchConditionDTO condition, Boolean order) {
+        return objectinfoMapper.getAllPage(page, condition, order);
+//        for(Objectinfo objectinfo : results) {
+//
+//        }
+//        List<ObjectinfoVO>
+//        return listPage;
     }
 
     @Override
@@ -72,4 +87,5 @@ public class ObjectinfoServiceImpl extends ServiceImpl<ObjectinfoMapper, Objecti
             objectInfo.remove("geoCenter");
         }
     }
+
 }
