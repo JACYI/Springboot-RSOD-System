@@ -14,5 +14,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ImageinfoMapper extends BaseMapper<Imageinfo> {
-
+    void deleteImageinfoByFilename(String imageName);
 }

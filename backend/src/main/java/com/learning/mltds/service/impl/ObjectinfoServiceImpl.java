@@ -1,10 +1,17 @@
 package com.learning.mltds.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.entity.Objectinfo;
 import com.learning.mltds.mapper.ObjectinfoMapper;
 import com.learning.mltds.service.IObjectinfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.learning.mltds.utils.MapUtils;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -16,5 +23,53 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ObjectinfoServiceImpl extends ServiceImpl<ObjectinfoMapper, Objectinfo> implements IObjectinfoService {
+    @Resource
+    private ObjectinfoMapper objectinfoMapper;
+    @Override
+    public Boolean saveObjectInfos(List<ObjectinfoDTO> objectinfoDTOS) {
+        for(ObjectinfoDTO objectinfoDTO:objectinfoDTOS){
+            objectinfoMapper.saveObjectInfo(MapUtils.entityToMap(objectinfoDTO));
+        }
+        return true;
+    }
 
+    @Override
+    public void turnObjectInfoSepcialValue(Map<String, Object> objectInfo) {
+        if(objectInfo.containsKey("bbox")){
+            List<Integer> bbox = (List<Integer>) objectInfo.get("bbox");
+            objectInfo.put("bboxP1X", bbox.get(0));
+            objectInfo.put("bboxP1Y", bbox.get(1));
+            objectInfo.put("bboxP2X", bbox.get(2));
+            objectInfo.put("bboxP2Y", bbox.get(3));
+            objectInfo.put("bboxP3X", bbox.get(4));
+            objectInfo.put("bboxP3Y", bbox.get(5));
+            objectInfo.put("bboxP4X", bbox.get(6));
+            objectInfo.put("bboxP4Y", bbox.get(7));
+            objectInfo.remove("bbox");
+        }
+        if(objectInfo.containsKey("geoBbox")){
+            List<Double> geoBbox = (List<Double>) objectInfo.get("geoBbox");
+            objectInfo.put("geoBboxP1X", geoBbox.get(0));
+            objectInfo.put("geoBboxP1Y", geoBbox.get(1));
+            objectInfo.put("geoBboxP2X", geoBbox.get(2));
+            objectInfo.put("geoBboxP2Y", geoBbox.get(3));
+            objectInfo.put("geoBboxP3X", geoBbox.get(4));
+            objectInfo.put("geoBboxP3Y", geoBbox.get(5));
+            objectInfo.put("geoBboxP4X", geoBbox.get(6));
+            objectInfo.put("geoBboxP4Y", geoBbox.get(7));
+            objectInfo.remove("geoBbox");
+        }
+        if(objectInfo.containsKey("imageCenter")){
+            List<Integer> imageCenter = (List<Integer>) objectInfo.get("imageCenter");
+            objectInfo.put("imageCenterX", imageCenter.get(0));
+            objectInfo.put("imageCenterY", imageCenter.get(1));
+            objectInfo.remove("imageCenter");
+        }
+        if(objectInfo.containsKey("geoCenter")){
+            List<Double> geoCenter = (List<Double>) objectInfo.get("geoCenter");
+            objectInfo.put("geoCenterLongitude", geoCenter.get(0));
+            objectInfo.put("geoCenterLatitude", geoCenter.get(1));
+            objectInfo.remove("geoCenter");
+        }
+    }
 }

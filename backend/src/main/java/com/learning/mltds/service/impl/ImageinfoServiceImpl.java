@@ -2,6 +2,7 @@ package com.learning.mltds.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.learning.mltds.dto.ImageinfoDTO;
 import com.learning.mltds.entity.Imageinfo;
 import com.learning.mltds.entity.Objectinfo;
 import com.learning.mltds.mapper.ImageinfoMapper;
@@ -11,7 +12,10 @@ import com.learning.mltds.utils.MapUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.List;
 
 /**
  * <p>
@@ -28,6 +32,7 @@ public class ImageinfoServiceImpl extends ServiceImpl<ImageinfoMapper, Imageinfo
     @Resource
     private IImageinfoService imageinfoService;
 
+    @Override
     public Map<String, Object> getDetectionImagesByTaskId(Integer taskId) {
         // 找到具有该id的任务中包含的所有图像信息，查询出多个Objectinfo对象
         QueryWrapper<Objectinfo> queryWrapper = new QueryWrapper<>();
@@ -45,8 +50,51 @@ public class ImageinfoServiceImpl extends ServiceImpl<ImageinfoMapper, Imageinfo
         return getDetectionMap(imageinfoIds);
     }
 
+    @Override
+    public boolean deleteImageInfo(String imageName) {
+        return this.deleteImageInfo(null, imageName);
+    }
+
+    @Override
+    public boolean deleteImageInfo(Integer userId, String imageName) {
+        QueryWrapper<Imageinfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(userId!=null, "user_id", userId);
+        queryWrapper.eq(imageName!=null, "filename", imageName);
+        return imageinfoService.remove(queryWrapper);
+    }
+
+    @Override
+    public Integer saveImageInfoFromMap(ImageinfoDTO imageinfoDTO) {
+        Imageinfo imageinfo = new Imageinfo();
+        imageinfo.setFilename(imageinfoDTO.getFilename());
+        imageinfo.setSatType(imageinfoDTO.getSatType());
+        imageinfo.setSensorType(imageinfoDTO.getSensorType());
+        imageinfo.setImageWidth(imageinfoDTO.getImageWidth());
+        imageinfo.setImageHeight(imageinfoDTO.getImHeight());
+        imageinfo.setPath(imageinfoDTO.getPath());
+        imageinfo.setIsDetected(imageinfoDTO.getIsDetected());
+        imageinfo.setTaskId(imageinfoDTO.getTaskId());
+        imageinfo.setDetectedTime(imageinfoDTO.getDetectedTime());
+
+        return imageinfoService.save(imageinfo) ? imageinfo.getId() : -1;
+    }
+//    public Integer saveImageInfoFromMap(Map<String, Object> imageinfoMap) {
+//        Imageinfo imageinfo = new Imageinfo();
+//        imageinfo.setFilename(imageinfoMap.get("filename"));
+//        imageinfo.setSatType( (String) imageinfoMap.get("sat_type"));
+//        imageinfo.setSensorType( (String) imageinfoMap.get("sensor_type"));
+//        imageinfo.setImageWidth( (Integer) imageinfoMap.get("image_width"));
+//        imageinfo.setImageHeight( (Integer) imageinfoMap.get("im_height"));
+//        imageinfo.setPath( (String) imageinfoMap.get("path"));
+//        imageinfo.setIsDetected( (Boolean) imageinfoMap.get("is_detected"));
+//        imageinfo.setTaskId( (Integer) imageinfoMap.get("task_id"));
+//        imageinfo.setDetectedTime(LocalDateTime.now());
+//
+//        return imageinfoService.save(imageinfo) ? imageinfo.getId() : -1;
+//    }
+
     /**
-     * 根据imageinfo ids 查询所有"image_id"在ids中的objectinfo
+     * 根据 imageinfo ids 查询所有 "image_id"在ids中的objectinfo
      * @param imageinfosIds 查询图像的数据库id集合
      * @return Map {图像1名: {"image_info": {}, "object_infos": {} }, ... }
      */
@@ -60,13 +108,18 @@ public class ImageinfoServiceImpl extends ServiceImpl<ImageinfoMapper, Imageinfo
             QueryWrapper<Objectinfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("image_id", imageinfoId);
             List<Objectinfo> objectinfos = objectinfoService.list(queryWrapper);
+            // 驼峰转下划线
+
             imageinfo.setIsDetected(objectinfos.isEmpty() ? Boolean.FALSE : Boolean.TRUE);
 
             // imageinfo 对象并转化为 Map 对象
             Map<String, Object> imageinfoMap = MapUtils.entityToMap(imageinfo);
+            // objectinfo 对象转为 Map 对象
+            List<Map<String, Object>> objectinfoMaps = MapUtils.entitysToMap(objectinfos);
+            // response data: { <imageName>: {"image_info": {}, "object_info": {} }, ... }
             Map<String, Object> imageRes = new HashMap<>();
             imageRes.put("image_info", imageinfoMap);
-            imageRes.put("object_infos", objectinfos);
+            imageRes.put("object_infos", objectinfoMaps);
             result.put(imageinfo.getFilename(), imageRes);
         }
 

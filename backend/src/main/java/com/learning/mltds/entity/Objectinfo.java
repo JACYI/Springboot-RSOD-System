@@ -1,8 +1,7 @@
 package com.learning.mltds.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -31,8 +30,8 @@ public class Objectinfo implements Serializable {
     private String classname;
 
     private String typename;
-
-    private String shipNumber;
+    @TableField(insertStrategy = FieldStrategy.NEVER)
+    private String shipNumber;  //弦号
 
     private LocalDateTime detectedTime;
 
@@ -82,10 +81,11 @@ public class Objectinfo implements Serializable {
 
     private String areaSlicePath;
 
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private LocalDateTime createTime;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private LocalDateTime updateTime;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Integer isDeleted;
 
     private Integer imageId;

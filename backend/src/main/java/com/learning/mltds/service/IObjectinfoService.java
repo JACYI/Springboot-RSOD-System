@@ -1,7 +1,11 @@
 package com.learning.mltds.service;
 
+import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.entity.Objectinfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IObjectinfoService extends IService<Objectinfo> {
 
+    Boolean saveObjectInfos(List<ObjectinfoDTO> objectinfoDTOS);
+
+    void turnObjectInfoSepcialValue(Map<String, Object> objectInfo);
 }

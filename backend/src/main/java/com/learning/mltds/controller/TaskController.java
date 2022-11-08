@@ -179,6 +179,9 @@ public class TaskController {
     @PostMapping("{id}/")
     public Map<String, Object> getTask(@PathVariable("id") Integer taskId) {
         Task task = taskService.getById(taskId);
+        if(task == null)
+            // 任务不存在，返回
+            return ResUtils.makeResponse("Error", "任务不存在！");
         Map<String, Object> taskResult = null;
 
         if(task.getStatus().equals("SUCCESS")){

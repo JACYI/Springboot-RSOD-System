@@ -1,8 +1,7 @@
 package com.learning.mltds.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -28,18 +27,20 @@ public class Imageinfo implements Serializable {
 
     private String filename;
 
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double latitude;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double longitude;
 
     private Integer imageWidth;
 
     private Integer imageHeight;
 
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double spatialResolution;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Integer imageBands;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private String imageType;
 
     private String satType;
@@ -47,25 +48,27 @@ public class Imageinfo implements Serializable {
     private String sensorType;
 
     private String path;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private LocalDateTime observationTime;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private LocalDateTime productTime;
 
-    private LocalDateTime detectedTime;
+    private String detectedTime;
 
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double projectedCoordinateX;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double projectedCoordinateY;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private LocalDateTime createTime;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private LocalDateTime updateTime;
 
     private Boolean isDetected;
 
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Boolean isProcessed;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Integer isDeleted;
 
     private Integer taskId;
