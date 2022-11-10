@@ -44,9 +44,8 @@ public class ObjectinfoController {
         // 是否按倒序，true表示倒序,false表示正序
         Boolean order = (requestBody.getOrDefault("order", "-id")).equals("-id");
         SearchConditionDTO condition = ReqUtils.searchConditionConvert(requestBody.get("form"));
-//condition.getClassname()
+
         // 获取查询结果，使用IPage拦截器获取结果，
-//        Integer limitFirst = (pageNum - 1) * pageSize;
         IPage<Objectinfo> searchResult = objectinfoService.pageSearch(
                 new Page<>(pageNum, pageSize), condition, order);
 

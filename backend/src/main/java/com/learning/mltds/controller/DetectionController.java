@@ -98,8 +98,10 @@ public class DetectionController {
                     task.setProgress(100.);
                     task.setTaskUserId(userId);
                     task.setIsConfirmed(Boolean.FALSE);
-                    flag = taskService.save(task);
-                    if (!flag) {
+                    try {
+                        if(!taskService.save(task))
+                            throw new Exception("任务添加失败");
+                    } catch (Exception e) {
                         System.out.println("保存结果时，任务添加失败");
                         return ResUtils.makeResponse("Error", "新建Task失败");
                     }
@@ -217,23 +219,28 @@ public class DetectionController {
 
 
             // 批量保存目标信息
-            if(objectinfoDTOS.size() != 0) {
-                flag = objectInfoService.saveObjectInfos(objectinfoDTOS);
-            }
-            if(!flag){
-                System.out.println("保存结果时，目标添加失败");
+            try {
+                if (objectinfoDTOS.size() != 0)
+                    if(!objectInfoService.saveObjectInfos(objectinfoDTOS))
+                        throw new Exception("保存结果时, 目标添加失败");
+            } catch (Exception e) {
+                e.printStackTrace();
                 return ResUtils.makeResponse("Error", "保存结果时，目标添加失败");
             }
+
             // TODO 当前结果是有对应的taksID的，说明是检测来的结果或者曾经保存过的结果, 逻辑待确认
             if(currentTaskId != -1){
                 // 确认任务
                 Task task = taskService.getById(currentTaskId);
                 task.setIsConfirmed(Boolean.TRUE);
-                flag = taskService.updateById(task);
-                if(!flag){
+                try {
+                    if(!taskService.updateById(task))
+                        throw new Exception("更新Task的Confirm失败");
+                } catch (Exception e) {
+                    e.printStackTrace();
                     return ResUtils.makeResponse("Error", "更新Task的Confirm失败");
                 }
-                // 如果当前不为-1，那么缓存中可能存在该信息，需要删除缓存。基础逻辑为先更新数据库再删除缓存，这种策略更好一点
+                // TODO 如果当前不为-1，那么缓存中可能存在该信息，需要删除缓存。基础逻辑为先更新数据库再删除缓存，这种策略更好一点
                 // redisTaskId = currentTaskId;
             }
             // 保存检测结果到 TXT 文件
