@@ -240,17 +240,23 @@
                 <if test="condition.filename != null">
                     and filename=#{condition.filename}
                 </if>
+                <if test="condition.confidenceGte != null">
+                    and obj.confidence > #{condition.confidenceGte}
+                </if>
+                <if test="condition.confidenceLte != null">
+                    and obj.confidence &lt; #{condition.confidenceLte}
+                </if>
                 <if test="condition.classname != null">
                     and obj.classname=#{condition.classname}
                 </if>
                 <if test="condition.typename != null">
                     and obj.typename=#{condition.typename}
                 </if>
-                <if test="condition.confidenceGte != null">
-                    and obj.confidence > #{condition.confidenceGte}
+                <if test="condition.detectedTimeGte != null &amp;&amp; condition.detectedTimeGte != &quot;&quot;">
+                    and obj.detected_time > #{condition.detectedTimeGte}
                 </if>
-                <if test="condition.confidenceLte != null">
-                    and obj.confidence &lt; #{condition.confidenceLte}
+                <if test="condition.detectedTimeLte != null &amp;&amp; condition.detectedTimeLte != &quot;&quot;">
+                    and obj.detected_time &lt; #{condition.detectedTimeLte}
                 </if>
                 <if test="condition.imageCenterXGte != null">
                     and obj.image_center_x > #{condition.imageCenterXGte}
