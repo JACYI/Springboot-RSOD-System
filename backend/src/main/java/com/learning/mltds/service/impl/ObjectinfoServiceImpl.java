@@ -33,7 +33,11 @@ public class ObjectinfoServiceImpl extends ServiceImpl<ObjectinfoMapper, Objecti
     @Override
     public Boolean saveObjectInfos(List<ObjectinfoDTO> objectinfoDTOS) {
         for(ObjectinfoDTO objectinfoDTO:objectinfoDTOS){
-            objectinfoMapper.saveObjectInfo(MapUtils.entityToMap(objectinfoDTO));
+//            Map<String, Object> test =  MapUtils.entityToMap(objectinfoDTO);
+//            for (String key: test.keySet()){
+//                System.out.println(key + "\t" + test.get(key));
+//            }
+            objectinfoMapper.saveObjectInfo(objectinfoDTO);
         }
         return true;
     }

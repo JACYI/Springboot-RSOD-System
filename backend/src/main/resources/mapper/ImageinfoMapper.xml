@@ -2,9 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.learning.mltds.mapper.ImageinfoMapper">
     <update id="deleteImageinfoByFilename">
-        update mltds_imageinfo img, mltds_objectinfo obj, mltds_task task
-            SET obj.is_deleted = 1, img.is_deleted = 1
-            WHERE (img.filename = #{imageName} and obj.image_id = img.id and img.is_deleted = 0 and obj.is_deleted =0 and img.task_id=task.id)
-               OR (img.filename = #{imageName} and img.is_deleted = 0 and img.task_id=task.id)
+        UPDATE mltds_imageinfo img
+        SET img.is_deleted = img.id
+        WHERE  (img.filename = #{imageName} and img.is_deleted = 0)
     </update>
 </mapper>

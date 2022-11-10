@@ -5,109 +5,208 @@
     <insert id="saveObjectInfo">
         insert into mltds_objectinfo
         <set>
-            <if test="_parameter.containsKey('id')  &amp;&amp; id != null">
+            <if test="id != null">
                 id=#{id},
             </if>
-            <if test="_parameter.containsKey('imageId')  &amp;&amp; imageId != null">
+            <if test="imageId != null">
                 image_id=#{imageId},
             </if>
-            <if test="_parameter.containsKey('taskId')  &amp;&amp; taskId != null">
+            <if test="taskId != null">
                 task_id=#{taskId},
             </if>
-            <if test="_parameter.containsKey('confidence')  &amp;&amp; confidence != null">
+            <if test="confidence != null">
                 confidence=#{confidence},
             </if>
-            <if test="_parameter.containsKey('classname') &amp;&amp; classname != &quot;&quot; &amp;&amp; classname != null">
+            <if test="classname != null">
                 classname=#{classname},
             </if>
-            <if test="_parameter.containsKey('typename') &amp;&amp; typename != &quot;&quot; &amp;&amp; typename != null">
+            <if test="typename != null">
                 typename=#{typename},
             </if>
-            <if test="_parameter.containsKey('shipNumber') &amp;&amp; shipNumber != &quot;&quot; &amp;&amp; shipNumber != null">
+            <if test="shipNumber != null">
                 ship_number=#{shipNumber},
             </if>
-            <if test="_parameter.containsKey('isDeleted') &amp;&amp;  isDeleted != null">
+            <if test="isDeleted != null">
                 is_deleted=#{isDeleted},
             </if>
-            <if test="_parameter.containsKey('imageCenterX')  &amp;&amp; imageCenterX != null">
+            <if test="imageCenterX != null">
                 image_center_x=#{imageCenterX},
             </if>
-            <if test="_parameter.containsKey('imageCenterY')  &amp;&amp; imageCenterY != null">
+            <if test="imageCenterY != null">
                 image_center_y=#{imageCenterY},
             </if>
-            <if test="_parameter.containsKey('geoCenterLongitude')  &amp;&amp; geoCenterLongitude != null">
+            <if test="geoCenterLongitude != null">
                 geo_center_longitude=#{geoCenterLongitude},
             </if>
-            <if test="_parameter.containsKey('geoCenterLatitude')  &amp;&amp; geoCenterLatitude != null">
+            <if test="geoCenterLatitude != null">
                 geo_center_latitude=#{geoCenterLatitude},
             </if>
-            <if test="_parameter.containsKey('bboxP1X') &amp;&amp; bboxP1X != null">
+            <if test="bboxP1X != null">
                 bbox_p1_x=#{bboxP1X},
             </if>
-            <if test="_parameter.containsKey('bboxP1Y')  &amp;&amp; bboxP1Y != null">
+            <if test="bboxP1Y != null">
                 bbox_p1_y=#{bboxP1Y},
             </if>
-            <if test="_parameter.containsKey('bboxP2X')  &amp;&amp; bboxP2X != null">
+            <if test="bboxP2X != null">
                 bbox_p2_x=#{bboxP2X},
             </if>
-            <if test="_parameter.containsKey('bboxP2Y')  &amp;&amp; bboxP2Y != null">
+            <if test="bboxP2Y != null">
                 bbox_p2_y=#{bboxP2Y},
             </if>
-            <if test="_parameter.containsKey('bboxP3X')  &amp;&amp; bboxP3X != null">
+            <if test="bboxP3X != null">
                 bbox_p3_x=#{bboxP3X},
             </if>
-            <if test="_parameter.containsKey('bboxP3Y')  &amp;&amp; bboxP3Y != null">
+            <if test="bboxP3Y != null">
                 bbox_p3_y=#{bboxP3Y},
             </if>
-            <if test="_parameter.containsKey('bboxP4X')  &amp;&amp; bboxP4X != null">
+            <if test="bboxP4X != null">
                 bbox_p4_x=#{bboxP4X},
             </if>
-            <if test="_parameter.containsKey('bboxP4Y')  &amp;&amp; bboxP4Y != null">
+            <if test="bboxP4Y != null">
                 bbox_p4_y=#{bboxP4Y},
             </if>
-            <if test="_parameter.containsKey('geoBboxP1X')  &amp;&amp; geoBboxP1X != null">
+            <if test="geoBboxP1X != null">
                 geo_bbox_p1_x=#{geoBboxP1X},
             </if>
-            <if test="_parameter.containsKey('geoBboxP1Y')  &amp;&amp; geoBboxP1Y != null">
+            <if test="geoBboxP1Y != null">
                 geo_bbox_p1_y=#{geoBboxP1Y},
             </if>
-            <if test="_parameter.containsKey('geoBboxP2X')  &amp;&amp; geoBboxP2X != null">
+            <if test="geoBboxP2X != null">
                 geo_bbox_p2_x=#{geoBboxP2X},
             </if>
-            <if test="_parameter.containsKey('geoBboxP2Y')  &amp;&amp; geoBboxP2Y != null">
+            <if test="geoBboxP2Y != null">
                 geo_bbox_p2_y=#{geoBboxP2Y},
             </if>
-            <if test="_parameter.containsKey('geoBboxP3X')  &amp;&amp; geoBboxP3X != null">
+            <if test="geoBboxP3X != null">
                 geo_bbox_p3_x=#{geoBboxP3X},
             </if>
-            <if test="_parameter.containsKey('geoBboxP3Y')  &amp;&amp; geoBboxP3Y != null">
+            <if test="geoBboxP3Y != null">
                 geo_bbox_p3_y=#{geoBboxP3Y},
             </if>
-            <if test="_parameter.containsKey('geoBboxP4X')  &amp;&amp; geoBboxP4X != null">
+            <if test="geoBboxP4X != null">
                 geo_bbox_p4_x=#{geoBboxP4X},
             </if>
-            <if test="_parameter.containsKey('geoBboxP4Y')  &amp;&amp; geoBboxP4Y != null">
+            <if test="geoBboxP4Y != null">
                 geo_bbox_p4_y=#{geoBboxP4Y},
             </if>
-            <if test="_parameter.containsKey('targetSlicePath') &amp;&amp; targetSlicePath != &quot;&quot; &amp;&amp; targetSlicePath != null">
+            <if test="targetSlicePath != &quot;&quot; &amp;&amp; targetSlicePath != null">
                 target_slice_path=#{targetSlicePath},
             </if>
-            <if test="_parameter.containsKey('fixTargetSlicePath') &amp;&amp; fixTargetSlicePath != &quot;&quot; &amp;&amp; fixTargetSlicePath != null">
+            <if test="fixTargetSlicePath != &quot;&quot; &amp;&amp; fixTargetSlicePath != null">
                 fix_target_slice_path=#{fixTargetSlicePath},
             </if>
-            <if test="_parameter.containsKey('areaSlicePath') &amp;&amp; areaSlicePath != &quot;&quot; &amp;&amp; areaSlicePath != null">
+            <if test="areaSlicePath != &quot;&quot; &amp;&amp; areaSlicePath != null">
                 area_slice_path=#{areaSlicePath},
             </if>
-            <if test="_parameter.containsKey('detectedTime') &amp;&amp; detectedTime != &quot;&quot; &amp;&amp; detectedTime != null">
+            <if test="detectedTime != &quot;&quot; &amp;&amp; detectedTime != null">
                 detected_time=#{detectedTime},
             </if>
-<!--            <if test="_parameter.containsKey('createTime') &amp;&amp; createTime != &quot;&quot; &amp;&amp; createTime != null">-->
-<!--                create_time=#{createTime},-->
-<!--            </if>-->
-<!--            <if test="_parameter.containsKey('updateTime') &amp;&amp; updateTime != &quot;&quot; &amp;&amp; updateTime != null">-->
-<!--                update_time=#{updateTime},-->
-<!--            </if>-->
         </set>
+<!--        insert into mltds_objectinfo-->
+<!--        <set>-->
+<!--            <if test="_parameter.containsKey('id')  &amp;&amp; id != null">-->
+<!--                id=#{id},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('imageId')  &amp;&amp; imageId != null">-->
+<!--                image_id=#{imageId},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('taskId')  &amp;&amp; taskId != null">-->
+<!--                task_id=#{taskId},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('confidence')  &amp;&amp; confidence != null">-->
+<!--                confidence=#{confidence},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('classname') &amp;&amp; classname != &quot;&quot; &amp;&amp; classname != null">-->
+<!--                classname=#{classname},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('typename') &amp;&amp; typename != &quot;&quot; &amp;&amp; typename != null">-->
+<!--                typename=#{typename},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('shipNumber') &amp;&amp; shipNumber != &quot;&quot; &amp;&amp; shipNumber != null">-->
+<!--                ship_number=#{shipNumber},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('isDeleted') &amp;&amp;  isDeleted != null">-->
+<!--                is_deleted=#{isDeleted},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('imageCenterX')  &amp;&amp; imageCenterX != null">-->
+<!--                image_center_x=#{imageCenterX},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('imageCenterY')  &amp;&amp; imageCenterY != null">-->
+<!--                image_center_y=#{imageCenterY},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoCenterLongitude')  &amp;&amp; geoCenterLongitude != null">-->
+<!--                geo_center_longitude=#{geoCenterLongitude},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoCenterLatitude')  &amp;&amp; geoCenterLatitude != null">-->
+<!--                geo_center_latitude=#{geoCenterLatitude},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('bboxP1X') &amp;&amp; bboxP1X != null">-->
+<!--                bbox_p1_x=#{bboxP1X},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('bboxP1Y')  &amp;&amp; bboxP1Y != null">-->
+<!--                bbox_p1_y=#{bboxP1Y},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('bboxP2X')  &amp;&amp; bboxP2X != null">-->
+<!--                bbox_p2_x=#{bboxP2X},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('bboxP2Y')  &amp;&amp; bboxP2Y != null">-->
+<!--                bbox_p2_y=#{bboxP2Y},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('bboxP3X')  &amp;&amp; bboxP3X != null">-->
+<!--                bbox_p3_x=#{bboxP3X},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('bboxP3Y')  &amp;&amp; bboxP3Y != null">-->
+<!--                bbox_p3_y=#{bboxP3Y},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('bboxP4X')  &amp;&amp; bboxP4X != null">-->
+<!--                bbox_p4_x=#{bboxP4X},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('bboxP4Y')  &amp;&amp; bboxP4Y != null">-->
+<!--                bbox_p4_y=#{bboxP4Y},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoBboxP1X')  &amp;&amp; geoBboxP1X != null">-->
+<!--                geo_bbox_p1_x=#{geoBboxP1X},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoBboxP1Y')  &amp;&amp; geoBboxP1Y != null">-->
+<!--                geo_bbox_p1_y=#{geoBboxP1Y},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoBboxP2X')  &amp;&amp; geoBboxP2X != null">-->
+<!--                geo_bbox_p2_x=#{geoBboxP2X},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoBboxP2Y')  &amp;&amp; geoBboxP2Y != null">-->
+<!--                geo_bbox_p2_y=#{geoBboxP2Y},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoBboxP3X')  &amp;&amp; geoBboxP3X != null">-->
+<!--                geo_bbox_p3_x=#{geoBboxP3X},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoBboxP3Y')  &amp;&amp; geoBboxP3Y != null">-->
+<!--                geo_bbox_p3_y=#{geoBboxP3Y},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoBboxP4X')  &amp;&amp; geoBboxP4X != null">-->
+<!--                geo_bbox_p4_x=#{geoBboxP4X},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('geoBboxP4Y')  &amp;&amp; geoBboxP4Y != null">-->
+<!--                geo_bbox_p4_y=#{geoBboxP4Y},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('targetSlicePath') &amp;&amp; targetSlicePath != &quot;&quot; &amp;&amp; targetSlicePath != null">-->
+<!--                target_slice_path=#{targetSlicePath},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('fixTargetSlicePath') &amp;&amp; fixTargetSlicePath != &quot;&quot; &amp;&amp; fixTargetSlicePath != null">-->
+<!--                fix_target_slice_path=#{fixTargetSlicePath},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('areaSlicePath') &amp;&amp; areaSlicePath != &quot;&quot; &amp;&amp; areaSlicePath != null">-->
+<!--                area_slice_path=#{areaSlicePath},-->
+<!--            </if>-->
+<!--            <if test="_parameter.containsKey('detectedTime') &amp;&amp; detectedTime != &quot;&quot; &amp;&amp; detectedTime != null">-->
+<!--                detected_time=#{detectedTime},-->
+<!--            </if>-->
+<!--&lt;!&ndash;            <if test="_parameter.containsKey('createTime') &amp;&amp; createTime != &quot;&quot; &amp;&amp; createTime != null">&ndash;&gt;-->
+<!--&lt;!&ndash;                create_time=#{createTime},&ndash;&gt;-->
+<!--&lt;!&ndash;            </if>&ndash;&gt;-->
+<!--&lt;!&ndash;            <if test="_parameter.containsKey('updateTime') &amp;&amp; updateTime != &quot;&quot; &amp;&amp; updateTime != null">&ndash;&gt;-->
+<!--&lt;!&ndash;                update_time=#{updateTime},&ndash;&gt;-->
+<!--&lt;!&ndash;            </if>&ndash;&gt;-->
+<!--        </set>-->
     </insert>
 
 <!--    <insert id="saveObjectInfoDTO" parameterType="com.learning.mltds.dto.ObjectinfoDTO">-->
@@ -141,18 +240,55 @@
                 <if test="condition.filename != null">
                     and filename=#{condition.filename}
                 </if>
-                <!--            <if test="condition.getConfidenceGte != null || condition.getConfidenceGte != null">-->
-                <!--                and obj.filename=#{condition.getFilename}-->
-                <!--            </if>-->
                 <if test="condition.classname != null">
                     and obj.classname=#{condition.classname}
                 </if>
-                <!--            <if test="condition.getClassname != null">-->
-                <!--                and obj.classname=#{condition.getClassname}-->
-                <!--            </if>-->
+                <if test="condition.typename != null">
+                    and obj.typename=#{condition.typename}
+                </if>
+                <if test="condition.confidenceGte != null">
+                    and obj.confidence > #{condition.confidenceGte}
+                </if>
+                <if test="condition.confidenceLte != null">
+                    and obj.confidence &lt; #{condition.confidenceLte}
+                </if>
+                <if test="condition.imageCenterXGte != null">
+                    and obj.image_center_x > #{condition.imageCenterXGte}
+                </if>
+                <if test="condition.imageCenterXLte != null">
+                    and obj.image_center_x &lt; #{condition.imageCenterXLte}
+                </if>
+                <if test="condition.imageCenterYGte != null">
+                    and obj.image_center_y > #{condition.imageCenterYGte}
+                </if>
+                <if test="condition.imageCenterYLte != null">
+                    and obj.image_center_y &lt; #{condition.imageCenterYLte}
+                </if>
+                <if test="condition.geoCenterLongitudeGte != null">
+                    and obj.geo_center_longitude > #{condition.geoCenterLongitudeGte}
+                </if>
+                <if test="condition.geoCenterLongitudeLte != null">
+                    and obj.geo_center_longitude &lt; #{condition.geoCenterLongitudeLte}
+                </if>
+                <if test="condition.geoCenterLatitudeGte != null">
+                    and obj.geo_center_latitude > #{condition.geoCenterLatitudeGte}
+                </if>
+                <if test="condition.geoCenterLatitudeLte != null">
+                    and obj.geo_center_latitude &lt; #{condition.geoCenterLatitudeLte}
+                </if>
+                <if test="condition.identifier != null">
+                    and identifier = #{condition.identifier}
+                </if>
             </where>
         <if test="order == true">
             ORDER BY obj.id DESC
         </if>
     </select>
+
+    <update id="deleteObjectinfoByFilename">
+        UPDATE mltds_objectinfo obj
+            LEFT JOIN mltds_imageinfo img on (obj.image_id = img.id)
+        SET obj.is_deleted = obj.id
+        WHERE (img.filename = #{filename} and img.is_deleted = 0 and obj.is_deleted =0)
+    </update>
 </mapper>

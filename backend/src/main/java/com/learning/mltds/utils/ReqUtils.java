@@ -20,7 +20,7 @@ public class ReqUtils {
         // 返回值初始化
         List<DetectionResultDTO> detectionResultDTOS = new ArrayList<>();
 
-
+        detectionResults = (Map<String, Object>) detectionResults.get("detectionResult");
         for(String imageName : detectionResults.keySet()) {
             Map<String, Object> detectionResult = (Map<String, Object>) detectionResults.get(imageName);
 
@@ -32,7 +32,7 @@ public class ReqUtils {
                     .satType((String) imageinfoMap.get("sat_type"))
                     .sensorType((String) imageinfoMap.get("sensor_type"))
                     .imageWidth((Integer) imageinfoMap.get("image_width"))
-                    .imHeight((Integer) imageinfoMap.get("im_height"))
+                    .imageHeight((Integer) imageinfoMap.get("image_height"))
                     .path((String) imageinfoMap.get("path"))
                     .isDetected((Boolean) imageinfoMap.get("is_detected"))
                     .taskId((Integer) imageinfoMap.get("task_id"))
@@ -58,7 +58,7 @@ public class ReqUtils {
                         .classname((String) objectInfo.get("classname"))
                         .typename((String) objectInfo.get("typename"))
                         .shipNumber((String) objectInfo.getOrDefault("shipNumber", null))
-                        .isDeleted((Integer) objectInfo.get("isDeleted"))
+//                        .isDeleted((Integer) objectInfo.get("isDeleted"))
                         .imageCenterX((Integer) objectInfo.get("imageCenterX"))
                         .imageCenterY((Integer) objectInfo.get("imageCenterY"))
                         .geoCenterLongitude((Double) objectInfo.get("geoCenterLongitude"))

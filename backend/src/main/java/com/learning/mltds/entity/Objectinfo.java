@@ -19,7 +19,7 @@ import lombok.Setter;
  * @author root
  * @since 2022-10-26
  */
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+//@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Getter
 @Setter
   @TableName("mltds_objectinfo")
@@ -38,7 +38,7 @@ public class Objectinfo implements Serializable {
     @TableField(insertStrategy = FieldStrategy.NEVER)
     private String shipNumber;  //弦号
 
-    private LocalDateTime detectedTime;
+    private String detectedTime;
 
     private Integer imageCenterX;
 

@@ -70,7 +70,7 @@ public class ImageinfoServiceImpl extends ServiceImpl<ImageinfoMapper, Imageinfo
         imageinfo.setSatType(imageinfoDTO.getSatType());
         imageinfo.setSensorType(imageinfoDTO.getSensorType());
         imageinfo.setImageWidth(imageinfoDTO.getImageWidth());
-        imageinfo.setImageHeight(imageinfoDTO.getImHeight());
+        imageinfo.setImageHeight(imageinfoDTO.getImageHeight());
         imageinfo.setPath(imageinfoDTO.getPath());
         imageinfo.setIsDetected(imageinfoDTO.getIsDetected());
         imageinfo.setTaskId(imageinfoDTO.getTaskId());

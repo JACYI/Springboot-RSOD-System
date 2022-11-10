@@ -20,7 +20,7 @@ public class ObjectinfoVO {
     private String classname;
     private String typename;
     private String shipNumber;
-    private LocalDateTime detectedTime;
+    private String detectedTime;
     private String imageCenter;
     private String geoCenter;
     private String bboxP1;

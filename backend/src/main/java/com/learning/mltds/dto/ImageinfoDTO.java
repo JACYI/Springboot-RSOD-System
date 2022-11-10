@@ -2,6 +2,7 @@ package com.learning.mltds.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ public class ImageinfoDTO {
     private String satType;
     private String sensorType;
     private Integer imageWidth;
-    private Integer imHeight;
+    private Integer imageHeight;
     private String path;
     private Boolean isDetected;
     private Integer taskId;

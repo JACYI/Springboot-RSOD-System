@@ -10,6 +10,7 @@ import com.learning.mltds.entity.Imageinfo;
 import com.learning.mltds.entity.Objectinfo;
 import com.learning.mltds.entity.Task;
 import com.learning.mltds.mapper.ImageinfoMapper;
+import com.learning.mltds.mapper.ObjectinfoMapper;
 import com.learning.mltds.service.IImageinfoService;
 import com.learning.mltds.service.IObjectinfoService;
 import com.learning.mltds.service.ITaskService;
@@ -40,6 +41,8 @@ public class DetectionController {
     private IObjectinfoService objectInfoService;
     @Resource
     private ImageinfoMapper imageinfoMapper;
+    @Resource
+    private ObjectinfoMapper objectinfoMapper;
 
     private static final String SLICE_BASE_PATH = CommonConfig.imageBaseUrl + "\\detection";
 
@@ -111,9 +114,12 @@ public class DetectionController {
             // 删除imageinfo记录的同时关联删除objectinfo对应记录 TODO 不考虑用户的版本，待改进
 //            imageInfoService.deleteImageInfo(userId, imageName);
 //            imageInfoService.deleteImageInfo(imageName);
+            objectinfoMapper.deleteObjectinfoByFilename(imageName);
             imageinfoMapper.deleteImageinfoByFilename(imageName);
 
             // 保存图片信息到数据库，返回新增的 Imageinfo 数据的 id
+//            System.out.println("--------------------------------------");
+//            System.out.println(imageResult);
             Integer imageinfoId = imageInfoService.saveImageInfoFromMap(imageResult);
             if(imageinfoId == -1){
                 System.out.println("保存结果时，图片添加失败");
