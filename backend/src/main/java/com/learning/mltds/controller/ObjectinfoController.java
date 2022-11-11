@@ -1,7 +1,7 @@
 package com.learning.mltds.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.dto.SearchConditionDTO;
 import com.learning.mltds.mapper.ObjectinfoMapper;
@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+*     /detection-management
  * </p>
- *
- * @author root
+ *  历史检测识别结果管理后端处理
+ * @author yiyonghoa
  * @since 2022-10-26
  */
 @RestController
@@ -57,6 +57,21 @@ public class ObjectinfoController {
 
         return ResUtils.makeResponse(objectinfoVOS, searchResult.getPages());
     }
+
+    @PostMapping("update/")
+    public Map<String, Object> update(@RequestBody Map<String, Object> requestBody) {
+        List<ObjectinfoDTO> objectinfoDTOS = ReqUtils.updateResultsConvert(requestBody);
+        try {
+            if(!objectinfoService.saveObjectInfoDTOS(objectinfoDTOS))
+                throw new Exception("保存结果失败");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResUtils.makeResponse("Error", "保存结果错误");
+        }
+        return ResUtils.makeResponse();
+    }
+
+
 
 
     @PostMapping

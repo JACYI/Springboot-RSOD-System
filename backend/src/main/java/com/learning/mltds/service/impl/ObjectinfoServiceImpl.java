@@ -1,17 +1,12 @@
 package com.learning.mltds.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.dto.SearchConditionDTO;
 import com.learning.mltds.entity.Objectinfo;
-import com.learning.mltds.entity.Task;
 import com.learning.mltds.mapper.ObjectinfoMapper;
 import com.learning.mltds.service.IObjectinfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.learning.mltds.utils.MapUtils;
-import com.learning.mltds.vo.ObjectinfoVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,13 +26,14 @@ public class ObjectinfoServiceImpl extends ServiceImpl<ObjectinfoMapper, Objecti
     @Resource
     private ObjectinfoMapper objectinfoMapper;
     @Override
-    public Boolean saveObjectInfos(List<ObjectinfoDTO> objectinfoDTOS) {
+    public Boolean saveObjectInfoDTOS(List<ObjectinfoDTO> objectinfoDTOS) {
         for(ObjectinfoDTO objectinfoDTO:objectinfoDTOS){
-//            Map<String, Object> test =  MapUtils.entityToMap(objectinfoDTO);
-//            for (String key: test.keySet()){
-//                System.out.println(key + "\t" + test.get(key));
-//            }
-            objectinfoMapper.saveObjectInfo(objectinfoDTO);
+            try {
+                objectinfoMapper.saveObjectInfoDTO(objectinfoDTO);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
         return true;
     }

@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public interface IObjectinfoService extends IService<Objectinfo> {
 
-    Boolean saveObjectInfos(List<ObjectinfoDTO> objectinfoDTOS);
+    Boolean saveObjectInfoDTOS(List<ObjectinfoDTO> objectinfoDTOS);
 
     void turnObjectInfoSepcialValue(Map<String, Object> objectInfo);
 

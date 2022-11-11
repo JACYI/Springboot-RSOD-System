@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Mapper
 public interface ObjectinfoMapper extends BaseMapper<Objectinfo> {
-    void saveObjectInfo(ObjectinfoDTO objectinfo);
+    void saveObjectInfoDTO(ObjectinfoDTO objectinfo);
 //    void saveObjectInfoDTO(ObjectinfoDTO objectinfoDTO);
 
 //    List<Objectinfo> searchObjectinfo(SearchConditionDTO condition, Integer limitFirst, Integer limitSecond);

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.learning.mltds.vo.ObjectinfoVO;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
   @TableName("mltds_objectinfo")
+@Builder
 public class Objectinfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -87,9 +89,9 @@ public class Objectinfo implements Serializable {
     private String areaSlicePath;
 
     @TableField(insertStrategy = FieldStrategy.NEVER)
-    private LocalDateTime createTime;
-    @TableField(insertStrategy = FieldStrategy.NEVER)
-    private LocalDateTime updateTime;
+    private String createTime;
+    @TableField(insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
+    private String updateTime;
     @TableField(insertStrategy = FieldStrategy.NEVER)
     private Integer isDeleted;
 
@@ -99,11 +101,14 @@ public class Objectinfo implements Serializable {
 
     public ObjectinfoVO convert2VO() {
         return ObjectinfoVO.builder()
+                .id(id)
                 .confidence(confidence)
                 .classname(classname)
                 .typename(typename)
                 .shipNumber(shipNumber)
                 .detectedTime(detectedTime)
+                .createTime(createTime)
+
                 .imageCenter(coord2String(imageCenterX, imageCenterY))
                 .geoCenter(coord2String(geoCenterLongitude, geoCenterLatitude))
 
@@ -119,10 +124,15 @@ public class Objectinfo implements Serializable {
 
                 .targetSlicePath(targetSlicePath)
                 .areaSlicePath(areaSlicePath)
+                .fixTargetSlicePath(fixTargetSlicePath)
+
+                .isDeleted(isDeleted)
+                .imageId(imageId)
+                .taskId(taskId)
                 .build();
     }
 
     public <T> String coord2String(T coordX, T coordY) {
-        return '(' + coordX.toString() + ',' + coordX.toString() + ')';
+        return '(' + coordX.toString() + ',' + coordY.toString() + ')';
     }
 }

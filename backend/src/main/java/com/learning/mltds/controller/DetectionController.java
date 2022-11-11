@@ -1,13 +1,11 @@
 package com.learning.mltds.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.learning.mltds.config.CommonConfig;
 import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ImageinfoDTO;
 import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.entity.Imageinfo;
-import com.learning.mltds.entity.Objectinfo;
 import com.learning.mltds.entity.Task;
 import com.learning.mltds.mapper.ImageinfoMapper;
 import com.learning.mltds.mapper.ObjectinfoMapper;
@@ -15,10 +13,8 @@ import com.learning.mltds.service.IImageinfoService;
 import com.learning.mltds.service.IObjectinfoService;
 import com.learning.mltds.service.ITaskService;
 import com.learning.mltds.utils.FileUtils;
-import com.learning.mltds.utils.MapUtils;
 import com.learning.mltds.utils.ReqUtils;
 import com.learning.mltds.utils.ResUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.io.File;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -221,7 +216,7 @@ public class DetectionController {
             // 批量保存目标信息
             try {
                 if (objectinfoDTOS.size() != 0)
-                    if(!objectInfoService.saveObjectInfos(objectinfoDTOS))
+                    if(!objectInfoService.saveObjectInfoDTOS(objectinfoDTOS))
                         throw new Exception("保存结果时, 目标添加失败");
             } catch (Exception e) {
                 e.printStackTrace();

@@ -4,6 +4,8 @@ import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ImageinfoDTO;
 import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.dto.SearchConditionDTO;
+import com.learning.mltds.entity.Objectinfo;
+import com.learning.mltds.vo.ObjectinfoVO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -101,6 +103,7 @@ public class ReqUtils {
         return detectionResultDTOS;
     }
 
+    // 检测结果管理查询条件解析方法
     public static SearchConditionDTO searchConditionConvert(Object conditions) {
         Map<String, Object> form = (Map<String, Object>) conditions;
         MapUtils.removeEmptyMap(form);
@@ -129,6 +132,20 @@ public class ReqUtils {
                 .identifier((String) form.getOrDefault("identifier", null))
                 .build();
         return conditionDTO;
+    }
+
+    // 检测结果管理修改解析
+    public static List<ObjectinfoDTO> updateResultsConvert(Map<String, Object> requestBody) {
+        List<ObjectinfoDTO> detectionResultDTOS = new ArrayList<>();
+        List<Map<String, Object>> updateDatas = (List<Map<String, Object>>) requestBody.get("updateData");
+        for(Map<String, Object> updateData : updateDatas) {
+            // 驼峰转下划线
+
+
+            ObjectinfoVO objectinfoVO = MapUtils.mapToEntity(updateData, ObjectinfoVO.class);
+            objectinfoVO.convert2DO();
+        }
+        return detectionResultDTOS;
     }
 
     // 坐标转换工具
