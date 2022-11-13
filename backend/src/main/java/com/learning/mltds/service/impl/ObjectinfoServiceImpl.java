@@ -38,6 +38,7 @@ public class ObjectinfoServiceImpl extends ServiceImpl<ObjectinfoMapper, Objecti
         return true;
     }
 
+    // 根据页码和条件搜索objectinfo
     @Override
     public IPage<Objectinfo> pageSearch(IPage<Objectinfo> page, SearchConditionDTO condition, Boolean order) {
         return objectinfoMapper.getAllPage(page, condition, order);
