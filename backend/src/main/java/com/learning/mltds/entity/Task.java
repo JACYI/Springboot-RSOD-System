@@ -58,6 +58,6 @@ public class Task implements Serializable {
 
     private Integer taskUserId;
 
-    private Integer isUpload;
+//    private Integer isUpload;
 
 }

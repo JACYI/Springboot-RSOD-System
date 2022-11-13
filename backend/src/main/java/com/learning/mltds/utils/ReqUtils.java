@@ -34,7 +34,7 @@ public class ReqUtils {
                     .satType((String) imageinfoMap.get("sat_type"))
                     .sensorType((String) imageinfoMap.get("sensor_type"))
                     .imageWidth((Integer) imageinfoMap.get("image_width"))
-                    .imageHeight((Integer) imageinfoMap.get("image_height"))
+                    .imageHeight((Integer) imageinfoMap.get("im_height"))
                     .path((String) imageinfoMap.get("path"))
                     .isDetected((Boolean) imageinfoMap.get("is_detected"))
                     .taskId((Integer) imageinfoMap.get("task_id"))
