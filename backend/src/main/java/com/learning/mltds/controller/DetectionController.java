@@ -216,7 +216,7 @@ public class DetectionController {
             // 批量保存目标信息
             try {
                 if (objectinfoDTOS.size() != 0)
-                    if(!objectInfoService.saveObjectInfoDTOS(objectinfoDTOS))
+                    if(!objectInfoService.saveObjectinfoDTOS(objectinfoDTOS))
                         throw new Exception("保存结果时, 目标添加失败");
             } catch (Exception e) {
                 e.printStackTrace();

@@ -25,15 +25,21 @@ import java.util.Map;
 public class ObjectinfoServiceImpl extends ServiceImpl<ObjectinfoMapper, Objectinfo> implements IObjectinfoService {
     @Resource
     private ObjectinfoMapper objectinfoMapper;
+
     @Override
-    public Boolean saveObjectInfoDTOS(List<ObjectinfoDTO> objectinfoDTOS) {
+    public boolean saveObjectinfo(ObjectinfoDTO objectinfoDTO){
+        try {
+            objectinfoMapper.saveObjectInfoDTO(objectinfoDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    @Override
+    public boolean saveObjectinfoDTOS(List<ObjectinfoDTO> objectinfoDTOS) {
         for(ObjectinfoDTO objectinfoDTO:objectinfoDTOS){
-            try {
-                objectinfoMapper.saveObjectInfoDTO(objectinfoDTO);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
+            saveObjectinfo(objectinfoDTO);
         }
         return true;
     }

@@ -120,24 +120,24 @@ public class MapUtils {
         return sb.toString();
     }
 
-//    //下划线转驼峰
-//    public static void underlineToCamel(Map<String, Object> map) {
-//
-//        Set<String> searchMapSet = map.keySet();
-//        List<String> searchMapKeyList = new ArrayList<>();
-//        for(String key: searchMapSet) {
-//            searchMapKeyList.add(key);
-//        }
-//        for(String key: searchMapKeyList) {
-//            String camelKey = underlineToCamel(key);
-//            // 如果这里是下划线那么就转成驼峰
-//            if (!map.containsKey(camelKey)) {
-//                map.put(camelKey, map.get(key));
-//                map.remove(key);
-//            }
-//        }
-//
-//    }
+    //下划线转驼峰
+    public static void mapUnderlineToCamel(Map<String, Object> map) {
+
+        Set<String> searchMapSet = map.keySet();
+        List<String> searchMapKeyList = new ArrayList<>();
+        for(String key: searchMapSet) {
+            searchMapKeyList.add(key);
+        }
+        for(String key: searchMapKeyList) {
+            String camelKey = underlineToCamel(key);
+            // 如果这里是下划线那么就转成驼峰
+            if (!map.containsKey(camelKey)) {
+                map.put(camelKey, map.get(key));
+                map.remove(key);
+            }
+        }
+
+    }
 
     // 驼峰下划线
     public static String camelToUnderline(String param, Integer charType) {

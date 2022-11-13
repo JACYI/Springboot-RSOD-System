@@ -90,7 +90,7 @@ public class Objectinfo implements Serializable {
 
     @TableField(insertStrategy = FieldStrategy.NEVER)
     private String createTime;
-    @TableField(insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
+    @TableField(insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.DEFAULT)
     private String updateTime;
     @TableField(insertStrategy = FieldStrategy.NEVER)
     private Integer isDeleted;

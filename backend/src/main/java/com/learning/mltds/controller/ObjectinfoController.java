@@ -1,7 +1,6 @@
 package com.learning.mltds.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.dto.SearchConditionDTO;
 import com.learning.mltds.mapper.ObjectinfoMapper;
@@ -60,9 +59,9 @@ public class ObjectinfoController {
 
     @PostMapping("update/")
     public Map<String, Object> update(@RequestBody Map<String, Object> requestBody) {
-        List<ObjectinfoDTO> objectinfoDTOS = ReqUtils.updateResultsConvert(requestBody);
+        List<Objectinfo> objectinfos = ReqUtils.updateResultsConvert(requestBody);
         try {
-            if(!objectinfoService.saveObjectInfoDTOS(objectinfoDTOS))
+            if(!objectinfoService.updateBatchById(objectinfos))
                 throw new Exception("保存结果失败");
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,6 +70,11 @@ public class ObjectinfoController {
         return ResUtils.makeResponse();
     }
 
+    @PostMapping("delete/")
+    public Map<String, Object> delete(@RequestBody List<Integer> deleteIds) {
+        objectinfoService.removeBatchByIds(deleteIds);
+        return ResUtils.makeResponse();
+    }
 
 
 

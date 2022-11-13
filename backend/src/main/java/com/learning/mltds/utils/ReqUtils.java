@@ -135,17 +135,17 @@ public class ReqUtils {
     }
 
     // 检测结果管理修改解析
-    public static List<ObjectinfoDTO> updateResultsConvert(Map<String, Object> requestBody) {
-        List<ObjectinfoDTO> detectionResultDTOS = new ArrayList<>();
+    public static List<Objectinfo> updateResultsConvert(Map<String, Object> requestBody) {
+        List<Objectinfo> detectionResults = new ArrayList<>();
         List<Map<String, Object>> updateDatas = (List<Map<String, Object>>) requestBody.get("updateData");
         for(Map<String, Object> updateData : updateDatas) {
             // 驼峰转下划线
-
-
+            MapUtils.mapUnderlineToCamel(updateData);
             ObjectinfoVO objectinfoVO = MapUtils.mapToEntity(updateData, ObjectinfoVO.class);
-            objectinfoVO.convert2DO();
+            detectionResults.add(objectinfoVO.convert2DO());
+
         }
-        return detectionResultDTOS;
+        return detectionResults;
     }
 
     // 坐标转换工具
