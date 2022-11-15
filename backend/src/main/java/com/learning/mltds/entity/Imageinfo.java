@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,11 +38,11 @@ public class Imageinfo implements Serializable {
 
     private Integer imageHeight;
 
-    @TableField(insertStrategy = FieldStrategy.NEVER)
+//    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double spatialResolution;
-    @TableField(insertStrategy = FieldStrategy.NEVER)
+//    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Integer imageBands;
-    @TableField(insertStrategy = FieldStrategy.NEVER)
+//    @TableField(insertStrategy = FieldStrategy.NEVER)
     private String imageType;
 
     private String satType;
@@ -55,9 +57,9 @@ public class Imageinfo implements Serializable {
 
     private String detectedTime;
 
-    @TableField(insertStrategy = FieldStrategy.NEVER)
+//    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double projectedCoordinateX;
-    @TableField(insertStrategy = FieldStrategy.NEVER)
+//    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double projectedCoordinateY;
     @TableField(insertStrategy = FieldStrategy.NEVER)
     private LocalDateTime createTime;

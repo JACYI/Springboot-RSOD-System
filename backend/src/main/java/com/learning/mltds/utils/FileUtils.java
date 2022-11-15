@@ -5,6 +5,7 @@ import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ImageinfoDTO;
 import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.entity.Objectinfo;
+import com.learning.mltds.vo.FileMenuVO;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
@@ -16,26 +17,22 @@ import java.util.*;
 
 @Component
 public class FileUtils {
-    public static Map<String, List<String>> listFiles(String path) {
-        if (path == null)
-            return new HashMap<>();
 
-        List<String> fileList = new ArrayList<>();
-        List<String> dirList = new ArrayList<>();
+    // 从当前路径下读取文件夹和文件信息 返回 FileMenuVO 对象
+    public static FileMenuVO listFiles(String path) {
+        if (path == null)
+            return new FileMenuVO();
+        FileMenuVO fileMenuVO = new FileMenuVO(path);
+
         for (File file : new File(path).listFiles()) {
-            //如果是文件夹
-            if (file.isDirectory()){
-                dirList.add(file.toString());
-            } else {
-                fileList.add(file.getName());
-                //下面是带有路径的写法
-                //list.add(file.getPath());
-            }
+            fileMenuVO.addMenuFile(file.isDirectory(), file.getName());
+            //下面是带有路径的写法
+            //fileMenuVO.addMenuFile(file.isDirectory(), file.getPath());
         }
-        Map<String, List<String>> list = new HashMap<>();
-        list.put("isDir", dirList);
-        list.put("isFile", fileList);
-        return list;
+//        Map<String, List<String>> list = new HashMap<>();
+//        list.put("isDir", dirList);
+//        list.put("isFile", fileList);
+        return fileMenuVO;
     }
 
     public static boolean saveDetectionResult2Txt(List<DetectionResultDTO> detectionResultDTOS) {
@@ -108,8 +105,8 @@ public class FileUtils {
 
     public static void main(String[] args) {
         String testFile = new String("C:\\Users\\yiyonghao\\Desktop\\FGVC\\IGARSS");
-        for (String file : listFiles(testFile).get("isFile")) {
-            System.out.println(file);
-        }
+//        for (String file : listFiles(testFile).get("isFile")) {
+//            System.out.println(file);
+//        }
     }
 }

@@ -1,8 +1,7 @@
 package com.learning.mltds.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -50,8 +49,9 @@ public class Task implements Serializable {
 
     private Boolean isConfirmed;
 
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private LocalDateTime createTime;
-
+    @TableField(insertStrategy = FieldStrategy.NEVER)
     private LocalDateTime updateTime;
 
     private Integer isDeleted;
