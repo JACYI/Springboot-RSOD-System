@@ -1,14 +1,21 @@
 package com.learning.mltds.utils.geoserver;
 
 import com.learning.mltds.entity.Imageinfo;
+import com.learning.mltds.service.IImageinfoService;
+import com.learning.mltds.service.impl.ImageinfoServiceImpl;
+import com.learning.mltds.vo.ImageinfoVO;
+import lombok.Data;
+import lombok.Getter;
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.gdal;
 import org.gdal.osr.CoordinateTransformation;
 import org.gdal.osr.SpatialReference;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Data
 public class TiffDataset {
     private String imagePath;
     private Dataset dataset;
@@ -44,13 +51,12 @@ public class TiffDataset {
         dataset.GetGeoTransform(geoTransform);
     }
 
-    public Imageinfo getImageinfo(){
-        Imageinfo imageinfo = new Imageinfo();
+    public ImageinfoVO getImageinfo(){
+        ImageinfoVO imageinfo = new ImageinfoVO();
         String filename = imagePath.substring(imagePath.lastIndexOf('\\') + 1, imagePath.lastIndexOf('.'));
         imageinfo.setFilename(filename);
         imageinfo.setPath(imagePath);
         imageinfo.setIsDetected(Boolean.FALSE); // 上传的图像检测置为false
-//        imageinfo.setTaskId(-1);
 
         imageinfo.setImageWidth(imageWidth);
         imageinfo.setImageHeight(imageHeight);
@@ -58,7 +64,7 @@ public class TiffDataset {
         imageinfo.setDetectedTime(LocalDateTime.now().toString());
 
         imageinfo.setSatType("default");
-        imageinfo.setImageType("default");
+        imageinfo.setImageType("OPTICAL");
         imageinfo.setSensorType("default");
 
         List<Double> extent = getTiffExtent();
@@ -66,7 +72,7 @@ public class TiffDataset {
 
         imageinfo.setLongitude(extent.get(0));
         imageinfo.setLatitude(extent.get(1));
-        // TODO GeoCenter 待补充
+        imageinfo.setGeoCenter(center);
         imageinfo.setSpatialResolution(geoTransform[1]);
         imageinfo.setProjectedCoordinateX(geoTransform[0]);
         imageinfo.setProjectedCoordinateY(geoTransform[3]);
@@ -157,7 +163,7 @@ public class TiffDataset {
         return extent;
     }
 
-    private double[] geo2LonLat(Dataset dataset, double x, double y) {
+    public double[] geo2LonLat(Dataset dataset, double x, double y) {
         SpatialReference prosrs = new SpatialReference();
         prosrs.ImportFromWkt(dataset.GetProjectionRef());
         SpatialReference geosrs = prosrs.CloneGeogCS();

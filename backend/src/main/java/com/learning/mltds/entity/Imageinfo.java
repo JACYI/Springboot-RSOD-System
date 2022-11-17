@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.learning.mltds.dto.ImageinfoDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,9 +30,9 @@ public class Imageinfo implements Serializable {
 
     private String filename;
 
-    @TableField(insertStrategy = FieldStrategy.NEVER)
+//    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double latitude;
-    @TableField(insertStrategy = FieldStrategy.NEVER)
+//    @TableField(insertStrategy = FieldStrategy.NEVER)
     private Double longitude;
 
     private Integer imageWidth;
@@ -75,5 +76,17 @@ public class Imageinfo implements Serializable {
 
     private Integer taskId;
 
-
+    public ImageinfoDTO convert2DTO(){
+        return ImageinfoDTO.builder()
+                .filename(filename)
+                .satType(satType)
+                .sensorType(sensorType)
+                .imageWidth(imageWidth)
+                .imageHeight(imageHeight)
+                .path(path)
+                .taskId(taskId)
+                .isDetected(isDetected)
+                .detectedTime(detectedTime)
+                .build();
+    }
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.entity.Imageinfo;
 import com.learning.mltds.entity.Task;
 import com.learning.mltds.entity.User;
@@ -182,12 +183,12 @@ public class TaskController {
         if(task == null)
             // 任务不存在，返回
             return ResUtils.makeResponse("Error", "任务不存在！");
-        Map<String, Object> taskResult = null;
+        List<DetectionResultDTO> taskResult = null;
 
         if(task.getStatus().equals("SUCCESS")){
             // 如果是检测识别结果，就从image_info中读数据，如果没有数据
             if(task.getCategory().equals("detection")) {
-                Map<String, Object> databaseResult = iImageinfoService.getDetectionImagesByTaskId(taskId);
+                List<DetectionResultDTO> databaseResult = iImageinfoService.getDetectionImagesByTaskId(taskId);
                 if (!databaseResult.isEmpty())
                     taskResult = databaseResult;
             }
@@ -196,7 +197,7 @@ public class TaskController {
                 // 任务成功有code, 根据code查询消息, 注意需要去除将code中的横杠
                 String code = task.getCode();
                 code = code.replace("-", "");
-                Map<String, Object> rabbitmqResult = getTaskFromRabbitMq.getMessage(code, code);
+                List<DetectionResultDTO> rabbitmqResult = getTaskFromRabbitMq.getMessage(code, code);
 
 //                System.out.println("Code: " + code);
 

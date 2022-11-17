@@ -6,6 +6,7 @@ import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ImageinfoDTO;
 import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.entity.Imageinfo;
+import com.learning.mltds.entity.Objectinfo;
 import com.learning.mltds.entity.Task;
 import com.learning.mltds.mapper.ImageinfoMapper;
 import com.learning.mltds.mapper.ObjectinfoMapper;
@@ -13,8 +14,11 @@ import com.learning.mltds.service.IImageinfoService;
 import com.learning.mltds.service.IObjectinfoService;
 import com.learning.mltds.service.ITaskService;
 import com.learning.mltds.utils.FileUtils;
+import com.learning.mltds.utils.ImageUtils;
 import com.learning.mltds.utils.ReqUtils;
 import com.learning.mltds.utils.ResUtils;
+import com.learning.mltds.vo.ObjectinfoVO;
+import com.sun.imageio.plugins.common.ImageUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,17 +37,19 @@ public class DetectionController {
     @Resource
     private IImageinfoService imageInfoService;
     @Resource
-    private IObjectinfoService objectInfoService;
+    private IObjectinfoService objectinfoService;
     @Resource
     private ImageinfoMapper imageinfoMapper;
     @Resource
     private ObjectinfoMapper objectinfoMapper;
 
-    private static final String SLICE_BASE_PATH = CommonConfig.imageBaseUrl + "\\detection";
+//    private static final String SLICE_BASE_PATH = CommonConfig.imageBaseUrl + "\\detection";
 
     // 保存检测结果
     @PostMapping("/save")
     public Map<String, Object> saveDetectionResult(@RequestBody Map<String, Object> detectionResults) {
+//    public Map<String, Object> saveDetectionResult(@RequestBody List<DetectionResultDTO> detectionResults) {
+
         List<DetectionResultDTO> detectionResultDTOS = ReqUtils.detectionResultsConvert(detectionResults);
         // 待修改，userid通过cookie获取
         Integer userId = 1;
@@ -53,27 +59,24 @@ public class DetectionController {
             Integer currentTaskId = -1;
 
             // 从resultDTO中读取数据
-            ImageinfoDTO imageResult = detectionResult.getImageinfoDTO();
-            List<ObjectinfoDTO> objectinfoDTOS = detectionResult.getObjectinfoList();
+            ImageinfoDTO imageResult = detectionResult.getImageInfo();
+            List<ObjectinfoVO> objectinfoVOS = detectionResult.getObjectInfos();
+//            // VO -> DO
+//            List<Objectinfo> objectinfos = new ArrayList<>();
+//            for(ObjectinfoVO objectinfoVO : objectinfoVOS) {
+//                objectinfos.add(objectinfoVO.convert2DO());
+//            }
+            // 这里的 imageName 不包含目录和后缀名！，等同于 filename
             String imageName = detectionResult.getImageName();
 
             //判断当前图片是否有其对应的taskId，如果没有那么就从创建一个
             // 判断是否存在任务id
-            for(ObjectinfoDTO objectinfoDTO : objectinfoDTOS){
-                if(objectinfoDTO.getTaskId() != null){
-                    currentTaskId = objectinfoDTO.getTaskId();
+            for(ObjectinfoVO objectinfoVO : objectinfoVOS){
+                if(objectinfoVO.getTaskId() != null){
+                    currentTaskId = objectinfoVO.getTaskId();
                     break;
                 }
             }
-//            List<Map<String, Object>> objectInfos = (List<Map<String, Object>>) detectionResult.get("object_infos");
-//            for(Map<String, Object> objectInfo : objectInfos){
-//                if(objectInfo.containsKey("task_id")){
-//                    currentTaskId = (Integer) objectInfo.get("task_id");
-//                    break;
-//                }
-//            }
-
-//            System.out.println(currentTaskId);
 
             if(currentTaskId == -1){
                 // 如果存在对应的图像imageinfo，则从imageinfo记录中提取taskId
@@ -137,62 +140,62 @@ public class DetectionController {
                 imageOnlyName = imageName.substring(0, imageName.indexOf('.'));
             }
             Integer objIndex = 0;
-            if(!new File(SLICE_BASE_PATH, userId.toString()).exists()){
-                new File(SLICE_BASE_PATH, userId.toString()).mkdirs();
+            if(!new File(CommonConfig.SLICE_PATH, userId.toString()).exists()){
+                new File(CommonConfig.SLICE_PATH, userId.toString()).mkdirs();
             }
 
-
-            // 调整目标信息，主要针对手动标注的目标进行信息的补充
-            for(ObjectinfoDTO objectinfoDTO : objectinfoDTOS){
-//                MapUtils.removeEmptyMap(objectInfo);
+            List<Objectinfo> objectinfos = new ArrayList<>();
+            // 调整目标信息 VI -> DO ，并针对手动标注的目标进行信息的补充
+            for(ObjectinfoVO objectinfoVO : objectinfoVOS){
+                Objectinfo objectinfo = objectinfoVO.convert2DO();
                 // 如果目标是重新标记的，那么就需要补充信息
-//                System.out.println("-------------------------");
-//                System.out.println(objectInfo);
+                if(objectinfoVO.getIsLabeled() != null && objectinfoVO.getIsLabeled()){
+                    // 标记的设置 confidence 为1.0
+                    if(objectinfoVO.getConfidence() == null)
+                        objectinfoVO.setConfidence(1.);
 
-                // TODO 待修改，调用gdal接口
-//                if(objectInfo.containsKey("is_labeled")){
-//                    if(!objectInfo.containsKey("confidence"))
-//                        objectInfo.put("confidence", objectInfo.getOrDefault("score", 1.0));
-//
-//                    // 经纬度转图像坐标
-//                    // TODO 这个目前转的不准
-//                    List<Integer> bbox = geoUtils.lonLat2Bbox(imagePath, (List<Double>)objectInfo.get("geo_bbox"));
-//                    objectInfo.put("bbox", bbox);
-//                    Integer mean_x = 0;
-//                    Integer mean_y = 0;
-//                    Integer min_x = Integer.MAX_VALUE;
-//                    Integer max_x = Integer.MIN_VALUE;
-//                    Integer min_y = Integer.MAX_VALUE;
-//                    Integer max_y = Integer.MIN_VALUE;
-//                    for(int i=0; i<bbox.size(); i+=2){
-//                        mean_x += bbox.get(i);
-//                        mean_y += bbox.get(i + 1);
-//                        min_x = Math.min(min_x, bbox.get(i));
-//                        max_x = Math.max(max_x, bbox.get(i));
-//                        min_y = Math.min(min_y, bbox.get(i +1));
-//                        max_y = Math.max(max_y,bbox.get(i + 1));
-//                    }
-//                    mean_x = mean_x / (bbox.size()  / 2);
-//                    mean_y = mean_y / (bbox.size()  / 2);
-//                    List<Integer> imageCenterList = new ArrayList<>();
-//                    imageCenterList.add(mean_x);
-//                    imageCenterList.add(mean_y);
-//                    objectInfo.put("imageCenter", imageCenterList);
-//
-//
-//                    // 保存图像切片
-//                    String targetCropImgPath = (new File((new File(STATICPATH, userId.toString())).toString(), imageOnlyName + "_" + objIndex + "_labeled.jpg")).toString();
-//                    String AreaCropImgPath = (new File((new File(STATICPATH, userId.toString())).toString(), imageOnlyName + "_" + objIndex + "_area_labeled.jpg")).toString();
-//                    imageUtil.imageCut(min_x, min_y, max_x - min_x, max_y - min_y, imagePath, targetCropImgPath);
-//                    imageUtil.imageCut(mean_x - AREASIZE / 2, mean_y - AREASIZE / 2, AREASIZE, AREASIZE, imagePath, AreaCropImgPath);
-//                    objectInfo.put("targetSlicePath", targetCropImgPath);
-//                    objectInfo.put("areaSlicePath", AreaCropImgPath);
-//                }
+                    List<Integer> bbox = objectinfoVO.getBbox();
+                    int x = 0, y = 0;
+                    for(int i=0; i<4; i++) {
+                        x += bbox.get(i*2);
+                        y += bbox.get(i*2+1);
+                    }
+                    objectinfo.setImageCenterX(x/4);
+                    objectinfo.setImageCenterY(y/4);
+
+                    Integer mean_x = 0;
+                    Integer mean_y = 0;
+                    int min_x = Integer.MAX_VALUE;
+                    int max_x = Integer.MIN_VALUE;
+                    int min_y = Integer.MAX_VALUE;
+                    int max_y = Integer.MIN_VALUE;
+                    for(int i=0; i<bbox.size(); i+=2){
+                        mean_x += bbox.get(i);
+                        mean_y += bbox.get(i + 1);
+                        min_x = Math.min(min_x, bbox.get(i));
+                        max_x = Math.max(max_x, bbox.get(i));
+                        min_y = Math.min(min_y, bbox.get(i + 1));
+                        max_y = Math.max(max_y, bbox.get(i + 1));
+                    }
+                    mean_x = mean_x / (bbox.size()  / 2);
+                    mean_y = mean_y / (bbox.size()  / 2);
+
+                    // 保存图像切片
+                    String slicePath = (new File(CommonConfig.SLICE_PATH, userId.toString())).toString();
+                    String targetCropImgPath = (new File(slicePath, imageOnlyName + "_" + objIndex + "_labeled.jpg")).toString();
+                    String AreaCropImgPath = (new File(slicePath, imageOnlyName + "_" + objIndex + "_area_labeled.jpg")).toString();
+                    ImageUtils.imageCut(min_x, min_y, max_x - min_x, max_y - min_y, imagePath, targetCropImgPath);
+                    ImageUtils.imageCut(mean_x - CommonConfig.areaSize / 2, mean_y - CommonConfig.areaSize / 2,
+                            CommonConfig.areaSize, CommonConfig.areaSize, imagePath, AreaCropImgPath);
+                    objectinfo.setTargetSlicePath(targetCropImgPath);
+                    objectinfo.setAreaSlicePath(AreaCropImgPath);
+                }
 
 
-                objectinfoDTO.setTaskId(currentTaskId);
-                objectinfoDTO.setImageId(imageinfoId);
+                objectinfo.setTaskId(currentTaskId);
+                objectinfo.setImageId(imageinfoId);
 
+                objectinfos.add(objectinfo);
 //                 下划线转驼峰,因为在遍历Map的同时添加key会有问题，所以这里写成这样了
 //                Set<String> objectInfoKeySet = ;
 //                List<String> objectInfoKeyList = new ArrayList<>(object.keySet());
@@ -215,8 +218,9 @@ public class DetectionController {
 
             // 批量保存目标信息
             try {
-                if (objectinfoDTOS.size() != 0)
-                    if(!objectInfoService.saveObjectinfoDTOS(objectinfoDTOS))
+                if (objectinfos.size() != 0)
+//                    if(!objectinfoService.saveObjectinfoDTOS(objectinfoDTOS))
+                    if(!objectinfoService.saveBatch(objectinfos))
                         throw new Exception("保存结果时, 目标添加失败");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -239,11 +243,44 @@ public class DetectionController {
                 // redisTaskId = currentTaskId;
             }
             // 保存检测结果到 TXT 文件
-            FileUtils.saveDetectionResult2Txt(detectionResultDTOS);
+            if(!FileUtils.saveDetectionResult2Txt(imageName, objectinfos)) {
+
+                return ResUtils.makeResponse("Error", "保存结果txt失败");
+            }
         }
 
 
 //        System.out.println(requestBody);
         return ResUtils.makeResponse();
+    }
+
+    @PostMapping("load_detection_result_from_db/")
+    public Map<String, Object> loadDetectionResultFromDB(@RequestBody Map<String, Object> requestBody) {
+        String imagePath = (String) requestBody.get("imagePath");
+
+        imagePath = ReqUtils.linux2WindowsPath(imagePath);
+
+        String filename = imagePath.substring(imagePath.lastIndexOf('\\') + 1);
+        String imageName = filename.substring(0, filename.lastIndexOf('.'));
+        QueryWrapper<Imageinfo> imageinfoQueryWrapper = new QueryWrapper<>();
+        imageinfoQueryWrapper.eq("is_deleted", 0);
+        imageinfoQueryWrapper.eq("filename", imageName);
+        Imageinfo imageOne = imageInfoService.getOne(imageinfoQueryWrapper);
+
+        // TODO 从txt中读取...
+
+        // 从数据库中读取
+        QueryWrapper<Objectinfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("image_id", imageOne.getId());
+        queryWrapper.eq("is_deleted", 0);
+        List<Objectinfo> objectinfos = objectinfoService.list(queryWrapper);
+        // 将DO转化为VO
+        List<ObjectinfoVO> objectinfoVOS = new ArrayList<>();
+        for(Objectinfo obj : objectinfos)
+            objectinfoVOS.add(obj.convert2VO(imagePath));
+
+        return ResUtils.makeResponse(new HashMap<String, Object>(){{
+            put("object_infos", objectinfoVOS);
+        }});
     }
 }

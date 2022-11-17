@@ -26,7 +26,7 @@ public class ImageController {
                            @PathVariable String imageName
                            ) {
         String localPath = Paths.get(CommonConfig.imageBaseUrl, catogory, type, taskId, imageName).toString();
-//        System.out.println(localPath);
+        System.out.println(localPath);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             BufferedImage bufferedImage = ImageIO.read(new FileInputStream(localPath));

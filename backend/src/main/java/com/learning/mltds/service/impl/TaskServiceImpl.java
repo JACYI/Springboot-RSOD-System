@@ -2,6 +2,7 @@ package com.learning.mltds.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.entity.Task;
 import com.learning.mltds.mapper.TaskMapper;
 import com.learning.mltds.service.ITaskService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +38,13 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
         return res;
     }
-    public Map<String, Object> makeTaskResult(Task task, Map<String, Object> taskResult) {
+    public Map<String, Object> makeTaskResult(Task task, List<DetectionResultDTO> taskResult) {
+        // 转换为前端需要的格式
+        Map<String, Object> jsonResultMap = new HashMap<>();
+        for(DetectionResultDTO detectionResultDTO : taskResult) {
+            jsonResultMap.put(detectionResultDTO.getImageName(), detectionResultDTO);
+        }
+
         Map<String, Object> res = new HashMap<>();
         res.put("task_id", task.getId());
         res.put("name", task.getName());
@@ -45,7 +53,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         res.put("status", task.getStatus());
         res.put("progress", task.getProgress());
         res.put("code", task.getCode());
-        res.put("task_result", taskResult);
+        res.put("task_result", jsonResultMap);
         return res;
     }
 

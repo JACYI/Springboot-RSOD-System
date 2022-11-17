@@ -123,7 +123,18 @@
             <version>1.2.46</version>
         </dependency>
 
-
+        <!--geoserver配置-->
+        <!-- https://mvnrepository.com/artifact/it.geosolutions/geoserver-manager -->
+        <dependency>
+            <groupId>com.github.dov-vlaanderen</groupId>
+            <artifactId>geoserver-manager</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+<!--            <dependency>-->
+<!--                <groupId>nl.pdok</groupId>-->
+<!--                <artifactId>geoserver-manager</artifactId>-->
+<!--                <version>1.7.0-pdok2</version>-->
+<!--            </dependency>-->
 
 
 

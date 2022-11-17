@@ -3,7 +3,9 @@ package com.learning.mltds.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.dto.SearchConditionDTO;
+import com.learning.mltds.entity.Imageinfo;
 import com.learning.mltds.mapper.ObjectinfoMapper;
+import com.learning.mltds.service.IImageinfoService;
 import com.learning.mltds.utils.ReqUtils;
 import com.learning.mltds.utils.ResUtils;
 import com.learning.mltds.vo.ObjectinfoVO;
@@ -36,6 +38,8 @@ public class ObjectinfoController {
     private IObjectinfoService objectinfoService;
     @Resource
     private ObjectinfoMapper objectinfoMapper;
+    @Resource
+    private IImageinfoService imageinfoService;
 
     @PostMapping("search/")
     public Map<String, Object> search(@RequestBody Map<String, Object> requestBody) {
@@ -51,8 +55,11 @@ public class ObjectinfoController {
         // DAO转化为VO返回response
         List<Objectinfo> objectinfoResults = searchResult.getRecords();
         List<ObjectinfoVO> objectinfoVOS = new ArrayList<>();
-        for(Objectinfo objectinfo : objectinfoResults)
-            objectinfoVOS.add(objectinfo.convert2VO());
+        for(Objectinfo objectinfo : objectinfoResults) {
+            Imageinfo one = imageinfoService.getById(objectinfo.getImageId());
+            String imagePath = one.getPath();
+            objectinfoVOS.add(objectinfo.convert2VO(imagePath));
+        }
 
         return ResUtils.makeResponse(objectinfoVOS, searchResult.getPages());
     }

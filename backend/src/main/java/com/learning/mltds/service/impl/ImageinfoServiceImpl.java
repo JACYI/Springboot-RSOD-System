@@ -2,6 +2,7 @@ package com.learning.mltds.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ImageinfoDTO;
 import com.learning.mltds.entity.Imageinfo;
 import com.learning.mltds.entity.Objectinfo;
@@ -9,6 +10,8 @@ import com.learning.mltds.mapper.ImageinfoMapper;
 import com.learning.mltds.service.IImageinfoService;
 import com.learning.mltds.service.IObjectinfoService;
 import com.learning.mltds.utils.MapUtils;
+import com.learning.mltds.vo.ObjectinfoVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,13 +30,13 @@ import java.util.List;
  */
 @Service
 public class ImageinfoServiceImpl extends ServiceImpl<ImageinfoMapper, Imageinfo> implements IImageinfoService {
-    @Resource
+    @Autowired
     private IObjectinfoService objectinfoService;
-    @Resource
+    @Autowired
     private IImageinfoService imageinfoService;
 
     @Override
-    public Map<String, Object> getDetectionImagesByTaskId(Integer taskId) {
+    public List<DetectionResultDTO> getDetectionImagesByTaskId(Integer taskId) {
         // 找到具有该id的任务中包含的所有图像信息，查询出多个Objectinfo对象
         QueryWrapper<Objectinfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("task_id", taskId);
@@ -98,8 +101,8 @@ public class ImageinfoServiceImpl extends ServiceImpl<ImageinfoMapper, Imageinfo
      * @param imageinfosIds 查询图像的数据库id集合
      * @return Map {图像1名: {"image_info": {}, "object_infos": {} }, ... }
      */
-    public Map<String, Object> getDetectionMap(Collection<Integer> imageinfosIds) {
-        Map<String, Object> result = new HashMap<>();
+    public List<DetectionResultDTO> getDetectionMap(Collection<Integer> imageinfosIds) {
+        List<DetectionResultDTO> result = new ArrayList<>();
 
         for(Integer imageinfoId:imageinfosIds){
             // 根据id获取 imageinfo 对象并转化为 Map
@@ -108,19 +111,34 @@ public class ImageinfoServiceImpl extends ServiceImpl<ImageinfoMapper, Imageinfo
             QueryWrapper<Objectinfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("image_id", imageinfoId);
             List<Objectinfo> objectinfos = objectinfoService.list(queryWrapper);
+
+            // objectinfo -> objectinfoVO
+            List<ObjectinfoVO> objectinfoVOS = new ArrayList<>();
+            for(Objectinfo obj : objectinfos){
+                // 找出objectinfo 对应的imagePath
+                Imageinfo one = imageinfoService.getById(obj.getImageId());
+                String imagePath = one.getPath();
+
+                objectinfoVOS.add(obj.convert2VO(imagePath));
+            }
             // 驼峰转下划线
 
             imageinfo.setIsDetected(objectinfos.isEmpty() ? Boolean.FALSE : Boolean.TRUE);
+            DetectionResultDTO detectionDTO = new DetectionResultDTO();
+            detectionDTO.setImageName(imageinfo.getFilename());
+            detectionDTO.setImageInfo(imageinfo.convert2DTO());
+            detectionDTO.setObjectInfos(objectinfoVOS);
+            result.add(detectionDTO);
 
-            // imageinfo 对象并转化为 Map 对象
-            Map<String, Object> imageinfoMap = MapUtils.entityToMap(imageinfo);
-            // objectinfo 对象转为 Map 对象
-            List<Map<String, Object>> objectinfoMaps = MapUtils.entitysToMap(objectinfos);
-            // response data: { <imageName>: {"image_info": {}, "object_info": {} }, ... }
-            Map<String, Object> imageRes = new HashMap<>();
-            imageRes.put("image_info", imageinfoMap);
-            imageRes.put("object_infos", objectinfoMaps);
-            result.put(imageinfo.getFilename(), imageRes);
+//            // imageinfo 对象并转化为 Map 对象
+//            Map<String, Object> imageinfoMap = MapUtils.entityToMap(imageinfo);
+//            // objectinfo 对象转为 Map 对象
+//            List<Map<String, Object>> objectinfoMaps = MapUtils.entitysToMap(objectinfos);
+//            // response data: { <imageName>: {"image_info": {}, "object_info": {} }, ... }
+//            Map<String, Object> imageRes = new HashMap<>();
+//            imageRes.put("image_info", imageinfoMap);
+//            imageRes.put("object_infos", objectinfoMaps);
+//            result.put(imageinfo.getFilename(), imageRes);
         }
 
         return result;

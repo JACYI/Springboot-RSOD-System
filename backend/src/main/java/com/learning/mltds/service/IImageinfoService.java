@@ -1,9 +1,11 @@
 package com.learning.mltds.service;
 
+import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ImageinfoDTO;
 import com.learning.mltds.entity.Imageinfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,7 +17,7 @@ import java.util.Map;
  * @since 2022-10-26
  */
 public interface IImageinfoService extends IService<Imageinfo> {
-    Map<String, Object> getDetectionImagesByTaskId(Integer taskId);
+    List<DetectionResultDTO> getDetectionImagesByTaskId(Integer taskId);
     boolean deleteImageInfo(String imageName);
     boolean deleteImageInfo(Integer userId, String imageName);
 

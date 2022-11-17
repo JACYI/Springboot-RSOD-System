@@ -9,9 +9,11 @@ import com.learning.mltds.service.IImageinfoService;
 import com.learning.mltds.service.IObjectinfoService;
 import com.learning.mltds.service.ITaskService;
 import com.learning.mltds.utils.FileUtils;
+import com.learning.mltds.utils.ReqUtils;
 import com.learning.mltds.utils.ResUtils;
 import com.learning.mltds.utils.geoserver.TiffDataset;
 import com.learning.mltds.vo.FileMenuVO;
+import com.learning.mltds.vo.ImageinfoVO;
 import org.gdal.gdal.Dataset;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +24,7 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,11 +80,11 @@ public class FileController {
         String imagePath = (String) requestBody.get("imagePath");
 
         // TODO windows转换功能在Linux系统不需要
-        imagePath = linux2WindowsPath(imagePath);
+        imagePath = ReqUtils.linux2WindowsPath(imagePath);
         System.out.println(imagePath);
 
         TiffDataset dataset = new TiffDataset(imagePath);
-        Imageinfo imageinfo = dataset.getImageinfo();
+        Imageinfo imageinfo = dataset.getImageinfo().convert2DO();
 
         // 由于 imageinfo 的外键包含task_id，因此需要创建对应的task任务
         Task task = new Task();
@@ -110,8 +113,10 @@ public class FileController {
             return ResUtils.makeResponse("Error", "保存任务失败");
         }
         // 保存imageinfo
-//        taskService.
         imageinfo.setTaskId(task.getId());
+        imageinfo.setIsDetected(Boolean.FALSE); // 上传的图像检测置为false
+        imageinfo.setDetectedTime(LocalDateTime.now().toString());
+
         try {
             if (!imageinfoService.save(imageinfo)) {
                 System.out.println("保存任务失败");
@@ -149,8 +154,5 @@ public class FileController {
 
         return null;
     }
-    // window系统使用
-    private String linux2WindowsPath(String path){
-        return path.replace('/', '\\');
-    }
+
 }

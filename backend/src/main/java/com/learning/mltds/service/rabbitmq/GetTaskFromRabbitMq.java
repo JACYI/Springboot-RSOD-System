@@ -3,6 +3,7 @@ package com.learning.mltds.service.rabbitmq;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.mltds.config.CommonConfig;
+import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.utils.rabbitmq.ConnectionUtil;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -27,10 +30,11 @@ public class GetTaskFromRabbitMq {
     private CachingConnectionFactory connectionFactory;
 
     // 从rabbitMq中接收消息
-    public Map<String, Object> getMessage(String queue, String routingKey){
+    public List<DetectionResultDTO> getMessage(String queue, String routingKey){
         //1 创建一个ConnectionFactory,并进行配置
         Channel channel;
-        Map<String, Object> result = null;
+        Map<String, Object> messageMap = null;
+
         try {
             connectionFactory = ConnectionUtil.cachingConnectionFactory();
             Connection connection = connectionFactory.getRabbitConnectionFactory().newConnection();
@@ -80,7 +84,8 @@ public class GetTaskFromRabbitMq {
                 // 获取message中的"result"对应的值，并转为 Map 对象返回
                 final JSONObject jsonObject = JSONObject.parseObject(message);
                 message = (String) jsonObject.get("result");
-                result = objectMapper.readValue(message, Map.class);
+                // TODO
+                messageMap = (Map<String, Object>) objectMapper.readValue(message, Map.class);
             }
             // 防止消息因channel没有关闭而造成的消息丢失,连接也关闭了吧，释放点资源
             catch (Exception e){
@@ -95,7 +100,18 @@ public class GetTaskFromRabbitMq {
         catch (Exception e){
             e.printStackTrace();
             System.out.println("消费者获取消息失败");
-            return new HashMap<>();
+            return new ArrayList<>();
+        }
+
+        // 将message转化为DetectionResultDTO，并加入结果数组
+        // messageMap : { "filename" : {}, ...}
+
+        List<DetectionResultDTO> result = new ArrayList<>();
+        for(String filename: messageMap.keySet()){
+            Map<String, Object> data = (Map<String, Object>) messageMap.get(filename);
+            Map<String, Object> imageinfoMap = (Map<String, Object>) data.get("image_info");
+            List<Map<String, Object>> objectinfosMap = (List<Map<String, Object>>) data.get("object_infos");
+            result.add(new DetectionResultDTO(imageinfoMap, objectinfosMap));
         }
 
         return result;

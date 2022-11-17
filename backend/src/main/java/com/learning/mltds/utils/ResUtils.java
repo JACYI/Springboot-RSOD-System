@@ -35,7 +35,7 @@ public class ResUtils {
         Map<String, Object> resultsMap = new HashMap<>();
         resultsMap.put("result", result);
         resultsMap.put("message", "");
-        resultsMap.put("status", "OK");
+        resultsMap.put("status", "ok");
 
         return resultsMap;
     }
