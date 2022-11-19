@@ -52,30 +52,46 @@ public class TiffDataset {
     }
 
     public ImageinfoVO getImageinfo(){
-        ImageinfoVO imageinfo = new ImageinfoVO();
-        String filename = imagePath.substring(imagePath.lastIndexOf('\\') + 1, imagePath.lastIndexOf('.'));
-        imageinfo.setFilename(filename);
-        imageinfo.setPath(imagePath);
-        imageinfo.setIsDetected(Boolean.FALSE); // 上传的图像检测置为false
-
-        imageinfo.setImageWidth(imageWidth);
-        imageinfo.setImageHeight(imageHeight);
-        imageinfo.setImageBands(bands);
-        imageinfo.setDetectedTime(LocalDateTime.now().toString());
-
-        imageinfo.setSatType("default");
-        imageinfo.setImageType("OPTICAL");
-        imageinfo.setSensorType("default");
-
         List<Double> extent = getTiffExtent();
         List<Double> center = getTiffGeoCenter();
 
-        imageinfo.setLongitude(extent.get(0));
-        imageinfo.setLatitude(extent.get(1));
-        imageinfo.setGeoCenter(center);
-        imageinfo.setSpatialResolution(geoTransform[1]);
-        imageinfo.setProjectedCoordinateX(geoTransform[0]);
-        imageinfo.setProjectedCoordinateY(geoTransform[3]);
+        ImageinfoVO imageinfo = ImageinfoVO.builder()
+                .filename(imagePath.substring(imagePath.lastIndexOf('\\') + 1, imagePath.lastIndexOf('.')))
+                .path(imagePath)
+                .isDetected(Boolean.FALSE)  // 上传的图像检测置为false
+                .imageWidth(imageWidth)
+                .imageHeight(imageHeight)
+                .imageBands(bands)
+                .detectedTime(LocalDateTime.now().toString())
+                .satType("default")
+                .imageType("OPTICAL")
+                .sensorType("default")
+                .longitude(extent.get(0))
+                .latitude(extent.get(1))
+                .geoCenter(center)
+                .spatialResolution(geoTransform[1])
+                .projectedCoordinateX(geoTransform[0])
+                .projectedCoordinateY(geoTransform[3])
+                .build();
+
+
+//        String filename = ;
+//        imageinfo.setFilename(filename);
+//        imageinfo.setPath(imagePath);
+//        imageinfo.setIsDetected(Boolean.FALSE);
+//        imageinfo.setImageWidth(imageWidth);
+//        imageinfo.setImageHeight(imageHeight);
+//        imageinfo.setImageBands(bands);
+//        imageinfo.setDetectedTime(LocalDateTime.now().toString());
+//        imageinfo.setSatType("default");
+//        imageinfo.setImageType("OPTICAL");
+//        imageinfo.setSensorType("default");
+//        imageinfo.setLongitude(extent.get(0));
+//        imageinfo.setLatitude(extent.get(1));
+//        imageinfo.setGeoCenter(center);
+//        imageinfo.setSpatialResolution(geoTransform[1]);
+//        imageinfo.setProjectedCoordinateX(geoTransform[0]);
+//        imageinfo.setProjectedCoordinateY(geoTransform[3]);
 
         return imageinfo;
     }

@@ -1,6 +1,7 @@
 package com.learning.mltds.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.learning.mltds.config.CommonConfig;
 import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.dto.SearchConditionDTO;
 import com.learning.mltds.entity.Imageinfo;

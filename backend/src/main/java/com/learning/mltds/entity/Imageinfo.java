@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.learning.mltds.dto.ImageinfoDTO;
+import com.learning.mltds.vo.ImageinfoVO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -87,6 +90,34 @@ public class Imageinfo implements Serializable {
                 .taskId(taskId)
                 .isDetected(isDetected)
                 .detectedTime(detectedTime)
+                .build();
+    }
+    public ImageinfoVO convert2VO() {
+        return ImageinfoVO.builder()
+
+                .filename(filename)
+                .latitude(latitude)
+                .longitude(longitude)
+                .imageWidth(imageWidth)
+                .imageHeight(imageHeight)
+                .spatialResolution(spatialResolution)
+                .imageBands(imageBands)
+                .geoCenter(new ArrayList<>(Arrays.asList(longitude, latitude)))
+                .imageType(imageType)
+                .satType(satType)
+                .sensorType(sensorType)
+                .path(path)
+                .observationTime(observationTime)
+                .productTime(productTime)
+                .detectedTime(detectedTime)
+                .projectedCoordinateX(projectedCoordinateX)
+                .projectedCoordinateY(projectedCoordinateY)
+                .updateTime(updateTime)
+                .createTime(createTime)
+                .isDetected(isDetected)
+                .isProcessed(isProcessed)
+                .isDeleted(isDeleted)
+                .taskId(taskId)
                 .build();
     }
 }

@@ -1,13 +1,17 @@
 package com.learning.mltds.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.learning.mltds.utils.MapUtils;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
 @Builder
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ImageinfoDTO {
     private String filename;
     private String satType;
@@ -18,6 +22,10 @@ public class ImageinfoDTO {
     private Boolean isDetected;
     private Integer taskId;
     private String detectedTime;
+
+    private List<Double> geoCenter;
+    private Double longitude;
+    private Double latitude;
 //    有builder不能有显式构造函数
 //    public ImageinfoDTO(Map<String, Object> imageinfoMap) {
 //        MapUtils.removeEmptyMap(imageinfoMap);  // 清除空值

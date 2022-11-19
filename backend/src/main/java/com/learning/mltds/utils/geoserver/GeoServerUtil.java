@@ -1,6 +1,7 @@
 package com.learning.mltds.utils.geoserver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.learning.mltds.config.CommonConfig;
 import com.sun.xml.internal.bind.v2.TODO;
 import it.geosolutions.geoserver.rest.GeoServerRESTManager;
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -91,7 +94,8 @@ public class GeoServerUtil {
 
 
 //        GeoServerRESTManager manager = managerList.get(index);
-        GeoServerRESTManager manager = new GeoServerRESTManager(new URL(RESTBASEURL), RESTUSER, RESTPW);
+        URL geoConnection = new URL(RESTBASEURL);
+        GeoServerRESTManager manager = new GeoServerRESTManager(geoConnection, RESTUSER, RESTPW);
 //        GeoServerRESTReader reader = readerList.get(index);
         GeoServerRESTPublisher publisher = manager.getPublisher();
 
@@ -109,9 +113,9 @@ public class GeoServerUtil {
         System.out.println("---------------------");
         System.out.println(WORKSPACE + ":" + storeName);
 
-        // TODO 目前dataStore访问的url地址不对，不能作为判断依据
-        boolean publish = manager.getPublisher().publishGeoTIFF(WORKSPACE, storeName, new File(imagePath));
-        System.out.println("TIFF文件发布，publish : " + publish);
+        // TODO 目前dataStore访问的url地址不对，不能作为判断依据，在windows上手动发布
+//        boolean publish = manager.getPublisher().publishGeoTIFF(WORKSPACE, storeName, new File(imagePath));
+//        System.out.println("TIFF文件发布，publish : " + publish);
         // 待修改
 //        RESTDataStore dataStore = manager.getReader().getDatastore(WORKSPACE, storeName);
 //        if(dataStore == null){

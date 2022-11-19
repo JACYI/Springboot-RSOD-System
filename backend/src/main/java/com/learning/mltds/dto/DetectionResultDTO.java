@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class DetectionResultDTO {
 
     public DetectionResultDTO(Map<String, Object> imageinfoMap, List<Map<String, Object>> objectinfosMap) {
         MapUtils.removeEmptyMap(imageinfoMap);  // 清除空值
+        ReqUtils.toHump(imageinfoMap);          // 下划线转驼峰
         this.imageInfo = ImageinfoDTO.builder()
                 .filename((String) imageinfoMap.get("filename"))
                 .satType((String) imageinfoMap.get("satType"))
@@ -38,6 +40,9 @@ public class DetectionResultDTO {
                 .taskId((Integer) imageinfoMap.get("taskId"))
                 .detectedTime((String) imageinfoMap.get("detectedTime"))
 //                    .detectedTime(LocalDateTime.parse((String) imageinfoMap.get("detect_time"), localDateTimeFormatter))
+                .geoCenter(new ArrayList<>(Arrays.asList((Double) imageinfoMap.get("longitude"), (Double) imageinfoMap.get("latitude"))))
+                .longitude((Double) imageinfoMap.get("longitude"))
+                .latitude((Double) imageinfoMap.get("latitude"))
                 .build();
 
         this.imageName = imageInfo.getFilename();
@@ -63,8 +68,8 @@ public class DetectionResultDTO {
                     .imageCenter((List<Integer>) objectInfo.get("imageCenter"))
                     .geoCenter((List<Double>) objectInfo.get("geoCenter"))
                     .geoCenter((List<Double>) objectInfo.get("geoCenter"))
-                    .length(((Integer) objectInfo.get("length")).doubleValue())
-                    .width(((Integer) objectInfo.get("width")).doubleValue())
+                    .length(((Number) objectInfo.get("length")).doubleValue())
+                    .width(((Number) objectInfo.get("width")).doubleValue())
                     .bbox((List<Integer>) objectInfo.get("bbox"))
                     .geoBbox((List<Double>) objectInfo.get("geoBbox"))
                     .targetSlicePath((String) objectInfo.get("targetSlicePath"))

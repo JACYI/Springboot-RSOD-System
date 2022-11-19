@@ -3,12 +3,14 @@ package com.learning.mltds.vo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.learning.mltds.entity.Imageinfo;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ImageinfoVO {
     private static final long serialVersionUID = 1L;
