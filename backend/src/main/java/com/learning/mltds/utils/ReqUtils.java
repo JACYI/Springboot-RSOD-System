@@ -27,79 +27,10 @@ public class ReqUtils {
 
             // 读取 image_info 对象 map
             Map<String, Object> imageinfoMap = (Map<String, Object>)detectionResult.get("image_info");
-            MapUtils.removeEmptyMap(imageinfoMap);  // 清除空值
-
-//            ImageinfoDTO imageinfoDTO = ImageinfoDTO.builder()
-//                    .filename((String) imageinfoMap.get("filename"))
-//                    .satType((String) imageinfoMap.get("sat_type"))
-//                    .sensorType((String) imageinfoMap.get("sensor_type"))
-//                    .imageWidth((Integer) imageinfoMap.get("image_width"))
-//                    .imageHeight((Integer) imageinfoMap.get("im_height"))
-//                    .path((String) imageinfoMap.get("path"))
-//                    .isDetected((Boolean) imageinfoMap.get("is_detected"))
-//                    .taskId((Integer) imageinfoMap.get("task_id"))
-//                    .detectedTime((String) imageinfoMap.get("detect_time"))
-////                    .detectedTime(LocalDateTime.parse((String) imageinfoMap.get("detect_time"), localDateTimeFormatter))
-//                    .build();
-//
             // 读取 object_info map
             List<Map<String, Object>> objectInfos = (List<Map<String, Object>>) detectionResult.get("object_infos");
-//            List<ObjectinfoDTO> objectinfoDTOS = new ArrayList<>();
 
             detectionResultDTOS.add(new DetectionResultDTO(imageinfoMap, objectInfos));
-//            for (Map<String, Object> objectInfo : objectInfos) {
-//                // 清除空值
-//                MapUtils.removeEmptyMap(objectInfo);
-//                // 下划线转驼峰
-//                toHump(objectInfo);
-//                // 拆除字典中的嵌套字典
-//                turnObjectInfoSepcialValue(objectInfo);
-//
-//                // 保存到 list 中
-//                ObjectinfoDTO objectinfoDTO = ObjectinfoDTO.builder()
-//                        .taskId((Integer) objectInfo.get("taskId"))
-//                        .confidence((Double) objectInfo.get("confidence"))
-//                        .classname((String) objectInfo.get("classname"))
-//                        .typename((String) objectInfo.get("typename"))
-//                        .shipNumber((String) objectInfo.getOrDefault("shipNumber", null))
-////                        .isDeleted((Integer) objectInfo.get("isDeleted"))
-//                        .imageCenterX((Integer) objectInfo.get("imageCenterX"))
-//                        .imageCenterY((Integer) objectInfo.get("imageCenterY"))
-//                        .geoCenterLongitude((Double) objectInfo.get("geoCenterLongitude"))
-//                        .geoCenterLatitude((Double) objectInfo.get("geoCenterLatitude"))
-//                        .bboxP1X((Integer) objectInfo.get("bboxP1X"))
-//                        .bboxP1Y((Integer) objectInfo.get("bboxP1Y"))
-//                        .bboxP2X((Integer) objectInfo.get("bboxP2X"))
-//                        .bboxP2Y((Integer) objectInfo.get("bboxP2Y"))
-//                        .bboxP3X((Integer) objectInfo.get("bboxP3X"))
-//                        .bboxP3Y((Integer) objectInfo.get("bboxP3Y"))
-//                        .bboxP4X((Integer) objectInfo.get("bboxP4X"))
-//                        .bboxP4Y((Integer) objectInfo.get("bboxP4Y"))
-//                        .geoBboxP1X((Double) objectInfo.get("geoBboxP1X"))
-//                        .geoBboxP1Y((Double) objectInfo.get("geoBboxP1Y"))
-//                        .geoBboxP2X((Double) objectInfo.get("geoBboxP2X"))
-//                        .geoBboxP2Y((Double) objectInfo.get("geoBboxP2Y"))
-//                        .geoBboxP3X((Double) objectInfo.get("geoBboxP3X"))
-//                        .geoBboxP3Y((Double) objectInfo.get("geoBboxP3Y"))
-//                        .geoBboxP4X((Double) objectInfo.get("geoBboxP4X"))
-//                        .geoBboxP4Y((Double) objectInfo.get("geoBboxP4Y"))
-//                        .targetSlicePath((String) objectInfo.get("targetSlicePath"))
-//                        .fixTargetSlicePath((String) objectInfo.get("fixTargetSlicePath"))
-//                        .areaSlicePath((String) objectInfo.get("areaSlicePath"))
-////                        .detectedTime(LocalDateTime.parse((String) imageinfoMap.get("detect_time"), localDateTimeFormatter))
-//                        .detectedTime((String) objectInfo.get("detectedTime"))
-//                        .build();
-//                objectinfoDTOS.add(objectinfoDTO);
-//            }
-//
-//
-////            map转化为detectionResultDTO对象
-//            DetectionResultDTO detectionResultDTO = DetectionResultDTO.builder()
-//                    .imageName(imageName)
-//                    .imageInfo(imageinfoDTO)
-//                    .objectInfos(objectinfoDTOS)
-//                    .build();
-//            detectionResultDTOS.add(detectionResultDTO);
         }
 
         return detectionResultDTOS;

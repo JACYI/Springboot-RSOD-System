@@ -135,6 +135,14 @@
 <!--                <artifactId>geoserver-manager</artifactId>-->
 <!--                <version>1.7.0-pdok2</version>-->
 <!--            </dependency>-->
+        <!-- java matrix 计算库       -->
+        <!-- https://mvnrepository.com/artifact/gov.nist.math/jama -->
+        <dependency>
+            <groupId>gov.nist.math</groupId>
+            <artifactId>jama</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
 
 
 

@@ -161,11 +161,11 @@ public class TiffDataset {
                 else
                     extent = null;
             } else {
-                double[] res1 = geo2LonLat(dataset, extent.get(0), extent.get(1));
+                double[] res1 = GeoUtils.geo2LonLat(dataset, extent.get(0), extent.get(1));
                 double[] res2 = new double[2];
                 // corner坐标是4个，中心坐标是2个
                 if(extent.size() == 4)
-                    res2 = geo2LonLat(dataset, extent.get(2), extent.get(3));
+                    res2 = GeoUtils.geo2LonLat(dataset, extent.get(2), extent.get(3));
 
                 if(extent.size() == 2)
                     extent = new ArrayList<>(Arrays.asList(res1[0], res1[1]));
@@ -179,13 +179,6 @@ public class TiffDataset {
         return extent;
     }
 
-    public double[] geo2LonLat(Dataset dataset, double x, double y) {
-        SpatialReference prosrs = new SpatialReference();
-        prosrs.ImportFromWkt(dataset.GetProjectionRef());
-        SpatialReference geosrs = prosrs.CloneGeogCS();
 
-        CoordinateTransformation ct = CoordinateTransformation.CreateCoordinateTransformation(prosrs, geosrs);
-        return ct.TransformPoint(x, y);
-    }
 
 }

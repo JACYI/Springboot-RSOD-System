@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,31 +53,55 @@ public class DetectionResultDTO {
             MapUtils.removeEmptyMap(objectInfo);
             // 下划线转驼峰
             ReqUtils.toHump(objectInfo);
-//            System.out.println(objectInfo.toString());
-            // 拆除字典中的嵌套字典
-//        ReqUtils.turnObjectInfoSepcialValue(objectInfo);
-//
+            // 以下属性需要考虑objectinfoMap不存在对应键的情况
+            Integer taskId = null;
+            List<Integer> imageCenter = null;
+            Double length = null;
+            Double width = null;
+            List<Integer> bbox = null;
+            String targetSlicePath = null;
+            String fixTargetSlicePath = null;
+            String areaSlicePath = null;
+            String detectedTime = LocalDateTime.now().toString();
+            if(objectInfo.containsKey("taskId"))
+                taskId = (Integer) objectInfo.get("taskId");
+            if(objectInfo.containsKey("imageCenter"))
+                imageCenter = (List<Integer>) objectInfo.get("imageCenter");
+            if(objectInfo.containsKey("length"))
+                length = ((Number) objectInfo.get("length")).doubleValue();
+            if(objectInfo.containsKey("width"))
+                width = ((Number) objectInfo.get("width")).doubleValue();
+            if(objectInfo.containsKey("bbox"))
+                bbox = (List<Integer>) objectInfo.get("bbox");
+            if(objectInfo.containsKey("targetSlicePath"))
+                targetSlicePath = (String) objectInfo.get("targetSlicePath");
+            if(objectInfo.containsKey("fixTargetSlicePath"))
+                fixTargetSlicePath = (String) objectInfo.get("fixTargetSlicePath");
+            if(objectInfo.containsKey("areaSlicePath"))
+                areaSlicePath = (String) objectInfo.get("areaSlicePath");
+            if(objectInfo.containsKey("detectedTime"))
+                detectedTime = (String) objectInfo.get("detectedTime");
+
             ObjectinfoVO objectinfoVO = ObjectinfoVO.builder()
                     // 保存到 list 中
-                    .taskId((Integer) objectInfo.get("taskId"))
-                    .confidence((Double) objectInfo.get("confidence"))
+                    .taskId(taskId)
+                    .confidence((Double) objectInfo.getOrDefault("confidence", null))
                     .classname((String) objectInfo.get("classname"))
                     .typename((String) objectInfo.get("typename"))
                     .shipNumber((String) objectInfo.getOrDefault("shipNumber", null))
                     .isLabeled((Boolean) objectInfo.getOrDefault("isLabeled", null))
 //                .isDeleted((Integer) objectInfo.get("isDeleted"))
-                    .imageCenter((List<Integer>) objectInfo.get("imageCenter"))
+                    .imageCenter(imageCenter)
                     .geoCenter((List<Double>) objectInfo.get("geoCenter"))
-                    .geoCenter((List<Double>) objectInfo.get("geoCenter"))
-                    .length(((Number) objectInfo.get("length")).doubleValue())
-                    .width(((Number) objectInfo.get("width")).doubleValue())
-                    .bbox((List<Integer>) objectInfo.get("bbox"))
+                    .length(length)
+                    .width(width)
+                    .bbox(bbox)
                     .geoBbox((List<Double>) objectInfo.get("geoBbox"))
-                    .targetSlicePath((String) objectInfo.get("targetSlicePath"))
-                    .fixTargetSlicePath((String) objectInfo.get("fixTargetSlicePath"))
-                    .areaSlicePath((String) objectInfo.get("areaSlicePath"))
+                    .targetSlicePath(targetSlicePath)
+                    .fixTargetSlicePath(fixTargetSlicePath)
+                    .areaSlicePath(areaSlicePath)
 //                .detectedTime(LocalDateTime.parse((String) imageinfoMap.get("detect_time"), localDateTimeFormatter))
-                    .detectedTime((String) objectInfo.get("detectedTime"))
+                    .detectedTime(detectedTime)
                     .build();
             objectInfos.add(objectinfoVO);
         }

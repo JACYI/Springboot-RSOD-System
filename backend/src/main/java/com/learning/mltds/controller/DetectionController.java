@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.learning.mltds.config.CommonConfig;
 import com.learning.mltds.dto.DetectionResultDTO;
 import com.learning.mltds.dto.ImageinfoDTO;
-import com.learning.mltds.dto.ObjectinfoDTO;
 import com.learning.mltds.entity.Imageinfo;
 import com.learning.mltds.entity.Objectinfo;
 import com.learning.mltds.entity.Task;
@@ -17,8 +16,9 @@ import com.learning.mltds.utils.FileUtils;
 import com.learning.mltds.utils.ImageUtils;
 import com.learning.mltds.utils.ReqUtils;
 import com.learning.mltds.utils.ResUtils;
+import com.learning.mltds.utils.geoserver.GeoUtils;
+import com.learning.mltds.utils.geoserver.TiffDataset;
 import com.learning.mltds.vo.ObjectinfoVO;
-import com.sun.imageio.plugins.common.ImageUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,10 +48,9 @@ public class DetectionController {
     // 保存检测结果
     @PostMapping("/save")
     public Map<String, Object> saveDetectionResult(@RequestBody Map<String, Object> detectionResults) {
-//    public Map<String, Object> saveDetectionResult(@RequestBody List<DetectionResultDTO> detectionResults) {
-
+        // 腐蚀层
         List<DetectionResultDTO> detectionResultDTOS = ReqUtils.detectionResultsConvert(detectionResults);
-        // 待修改，userid通过cookie获取
+        // TODO 待修改，userid通过cookie获取
         Integer userId = 1;
 
         for(DetectionResultDTO detectionResult:detectionResultDTOS){
@@ -61,11 +60,7 @@ public class DetectionController {
             // 从resultDTO中读取数据
             ImageinfoDTO imageResult = detectionResult.getImageInfo();
             List<ObjectinfoVO> objectinfoVOS = detectionResult.getObjectInfos();
-//            // VO -> DO
-//            List<Objectinfo> objectinfos = new ArrayList<>();
-//            for(ObjectinfoVO objectinfoVO : objectinfoVOS) {
-//                objectinfos.add(objectinfoVO.convert2DO());
-//            }
+
             // 这里的 imageName 不包含目录和后缀名！，等同于 filename
             String imageName = detectionResult.getImageName();
 
@@ -112,14 +107,10 @@ public class DetectionController {
 
             // 先删除数据库中旧的image_info，会选择名字相同且is_deleted为0进行删除
             // 删除imageinfo记录的同时关联删除objectinfo对应记录 TODO 不考虑用户的版本，待改进
-//            imageInfoService.deleteImageInfo(userId, imageName);
-//            imageInfoService.deleteImageInfo(imageName);
             objectinfoMapper.deleteObjectinfoByFilename(imageName);
             imageinfoMapper.deleteImageinfoByFilename(imageName);
 
             // 保存图片信息到数据库，返回新增的 Imageinfo 数据的 id
-//            System.out.println("--------------------------------------");
-//            System.out.println(imageResult);
             Integer imageinfoId = imageInfoService.saveImageInfoFromMap(imageResult);
             if(imageinfoId == -1){
                 System.out.println("保存结果时，图片添加失败");
@@ -129,39 +120,52 @@ public class DetectionController {
             // 对objectInfos中的信息做一些补充修正，主要针对自己标的目标
             Imageinfo imageinfo = imageInfoService.getById(imageinfoId);
             String imagePath = imageinfo.getPath(); // 遥感图像原图路径
-
             // TODO 检测路径映射到 springboot 后端路径
             imagePath = Paths.get(CommonConfig.sourceImagePath,
                     imagePath.split("task-image/")[1]).toString();
+            // 获取TiffDataset
+            TiffDataset dataset = new TiffDataset(imagePath);
 
             // 待保存切片名称设置
             String imageOnlyName = imageName;
             if(imageName.indexOf('.') != -1){
                 imageOnlyName = imageName.substring(0, imageName.indexOf('.'));
             }
-            Integer objIndex = 0;
-            if(!new File(CommonConfig.SLICE_PATH, userId.toString()).exists()){
-                new File(CommonConfig.SLICE_PATH, userId.toString()).mkdirs();
+            int objIndex = 0;
+
+            // 切片文件夹不存在时则创建
+            String slicePath = Paths.get(CommonConfig.SLICE_PATH, userId.toString(), currentTaskId.toString()).toString();
+            if(!new File(slicePath).exists()){
+                new File(slicePath).mkdirs();
             }
 
+            // 调整目标信息 VO -> DO ，并针对手动标注的目标进行信息的补充
             List<Objectinfo> objectinfos = new ArrayList<>();
-            // 调整目标信息 VI -> DO ，并针对手动标注的目标进行信息的补充
             for(ObjectinfoVO objectinfoVO : objectinfoVOS){
-                Objectinfo objectinfo = objectinfoVO.convert2DO();
-                // 如果目标是重新标记的，那么就需要补充信息
+
+                // 如果目标是重新标记的，那么就需要补充信息（长宽、图上坐标列表、图上中心坐标、切片等）
                 if(objectinfoVO.getIsLabeled() != null && objectinfoVO.getIsLabeled()){
                     // 标记的设置 confidence 为1.0
                     if(objectinfoVO.getConfidence() == null)
                         objectinfoVO.setConfidence(1.);
 
-                    List<Integer> bbox = objectinfoVO.getBbox();
+//                    List<Integer> bbox = objectinfoVO.getBbox();
+                    // 获取目标的经纬度坐标列表
+                    List<Double> geoBbox = objectinfoVO.getGeoBbox();
+                    // 根据经纬度坐标box获取目标长宽
+                    Map<String, Double> size = GeoUtils.getGeoRectSize(geoBbox);
+                    objectinfoVO.setLength(size.get("length"));
+                    objectinfoVO.setWidth(size.get("width"));
+                    // 经纬度坐标转化为图上坐标
+                    List<Integer> bbox = GeoUtils.lonLat2Bbox(dataset, geoBbox);
+                    objectinfoVO.setBbox(bbox);
+                    // 获取图上中心坐标
                     int x = 0, y = 0;
                     for(int i=0; i<4; i++) {
                         x += bbox.get(i*2);
                         y += bbox.get(i*2+1);
                     }
-                    objectinfo.setImageCenterX(x/4);
-                    objectinfo.setImageCenterY(y/4);
+                    objectinfoVO.setImageCenter(new ArrayList<>(Arrays.asList(x/4, y/4)));
 
                     Integer mean_x = 0;
                     Integer mean_y = 0;
@@ -180,38 +184,27 @@ public class DetectionController {
                     mean_x = mean_x / (bbox.size()  / 2);
                     mean_y = mean_y / (bbox.size()  / 2);
 
-                    // 保存图像切片
-                    String slicePath = (new File(CommonConfig.SLICE_PATH, userId.toString())).toString();
+                    // TODO 保存图像切片，TIF —> JPG 功能待开发
                     String targetCropImgPath = (new File(slicePath, imageOnlyName + "_" + objIndex + "_labeled.jpg")).toString();
-                    String AreaCropImgPath = (new File(slicePath, imageOnlyName + "_" + objIndex + "_area_labeled.jpg")).toString();
+                    String areaCropImgPath = (new File(slicePath, imageOnlyName + "_" + objIndex + "_area_labeled.jpg")).toString();
+                    // 裁剪目标框
                     ImageUtils.imageCut(min_x, min_y, max_x - min_x, max_y - min_y, imagePath, targetCropImgPath);
+                    // 裁剪目标框中心所在的边长是areaSize的矩形区域
                     ImageUtils.imageCut(mean_x - CommonConfig.areaSize / 2, mean_y - CommonConfig.areaSize / 2,
-                            CommonConfig.areaSize, CommonConfig.areaSize, imagePath, AreaCropImgPath);
-                    objectinfo.setTargetSlicePath(targetCropImgPath);
-                    objectinfo.setAreaSlicePath(AreaCropImgPath);
+                            CommonConfig.areaSize, CommonConfig.areaSize, imagePath, areaCropImgPath);
+
+
+                    objectinfoVO.setTargetSlicePath(targetCropImgPath);
+                    objectinfoVO.setAreaSlicePath(areaCropImgPath);
+                    objectinfoVO.setFixTargetSlicePath(targetCropImgPath);      // 没有修正后的目标切片，临时用target代替
                 }
+                // 保存数据 VO -> DO
 
+                objectinfoVO.setTaskId(currentTaskId);
+                objectinfoVO.setImageId(imageinfoId);
 
-                objectinfo.setTaskId(currentTaskId);
-                objectinfo.setImageId(imageinfoId);
+                objectinfos.add(objectinfoVO.convert2DO());
 
-                objectinfos.add(objectinfo);
-//                 下划线转驼峰,因为在遍历Map的同时添加key会有问题，所以这里写成这样了
-//                Set<String> objectInfoKeySet = ;
-//                List<String> objectInfoKeyList = new ArrayList<>(object.keySet());
-//                for(String key: objectInfoKeyList) {
-//                    String camelKey = MapUtils.underlineToCamel(key);
-//                    // 如果这里是下划线那么就转成驼峰
-//                    if (!objectInfo.containsKey(camelKey)) {
-//                        objectInfo.put(camelKey, objectInfo.get(key));
-//                        objectInfo.remove(key);
-//                    }
-//                }
-
-//                objectInfoService.turnObjectInfoSepcialValue(objectInfo);
-                // 如果第二次保存此时objectInfo是从数据库中读的，会带有id，需要pop掉，不然会出现主键重复的问题
-//                objectInfo.remove("id");
-//                System.out.println(objectInfo);
                 objIndex += 1;
             }
 

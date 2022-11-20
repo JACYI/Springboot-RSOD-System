@@ -1,24 +1,16 @@
 package com.learning.mltds.utils.geoserver;
 
+import Jama.Matrix;
+import org.gdal.gdal.Dataset;
+import org.gdal.osr.CoordinateTransformation;
+import org.gdal.osr.SpatialReference;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
-import javax.imageio.stream.ImageInputStream;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class GeoUtils {
-//    private final Double EARTH_RADIUS = 6378137.;//地球半径 单位是m
+    private static final Double EARTH_RADIUS = 6378137.;//地球半径 单位是m
 //
 //    // 重复的代码抽出来
 //    public GridCoverage2D getImage(String imagePath){
@@ -121,19 +113,24 @@ public class GeoUtils {
 //    }
 //
 //
-//    // TODO 经纬度转图片坐标，这个做出来对于有roate角的不准，待修改
-//    public List<Integer> lonLat2Bbox(String imagePath, List<Double> geoBbox){
+    // TODO 经纬度转图片坐标，这个做出来对于有roate角的不准，待修改
+    public static List<Integer> lonLat2Bbox(TiffDataset dataset, List<Double> geoBbox){
+        List<Integer> bbox = new ArrayList<>();
+
+        for(int i=0; i< geoBbox.size()/2; i++) {
+            double lon = geoBbox.get(i * 2), lat = geoBbox.get(i * 2 + 1);
+            double[] geoCoord = lonLat2Geo(dataset.getDataset(), lon, lat);
+            Integer[] imageCoord = geo2imagexy(dataset.getDataset(), geoCoord[0], geoCoord[1]);
+
+            bbox.addAll(Arrays.asList(imageCoord));
+        }
+
 //        GridCoverage2D coverage = getImage(imagePath);
 //        Envelope2D coverageEnvelope = coverage.getEnvelope2D();
-//
 //        RenderedImage image = coverage.getRenderedImage();
-//
-//
 //        List<Double> list1 = MillierConvertion(coverageEnvelope.getBounds2D().getMinX(), coverageEnvelope.getBounds2D().getMinY());
 //        List<Double> list2 = MillierConvertion(coverageEnvelope.getBounds2D().getMinX(), coverageEnvelope.getBounds2D().getMaxY());
 //        List<Double> list3 = MillierConvertion(coverageEnvelope.getBounds2D().getMaxX(), coverageEnvelope.getBounds2D().getMinY());
-//
-//
 //        // 将投影坐标转换为图片坐标
 //        Double projWidth = Math.abs(list3.get(0) - list1.get(0));
 //        Double projHeight = Math.abs(list2.get(1) - list1.get(1));
@@ -153,8 +150,133 @@ public class GeoUtils {
 //            bbox.add(width.intValue());
 //            bbox.add(height.intValue());
 //        }
-//        return bbox;
-//    }
+        return bbox;
+    }
+
+    // 图片坐标转经纬度
+    public static double[] geo2LonLat(Dataset dataset, double x, double y) {
+        SpatialReference prosrs = new SpatialReference();
+        prosrs.ImportFromWkt(dataset.GetProjectionRef());
+        SpatialReference geosrs = prosrs.CloneGeogCS();
+
+        CoordinateTransformation ct = CoordinateTransformation.CreateCoordinateTransformation(prosrs, geosrs);
+        return ct.TransformPoint(x, y);
+    }
+
+
+    /**
+     * 通过经纬度坐标获取矩形框的长度和宽度(米)
+     * @param geoBbox 经纬度坐标 [p1_lon, p1_lat, p2_lon, p2_lat, ... ]
+     * @return  Map: {"length": , "width": }
+     */
+    public static Map<String, Double> getGeoRectSize(List<Double> geoBbox) {
+        double[] a = new double[]{geoBbox.get(0), geoBbox.get(1)};
+        double[] b = new double[]{geoBbox.get(2), geoBbox.get(3)};
+        double[] c = new double[]{geoBbox.get(4), geoBbox.get(5)};
+
+        double a1 = distance(a, b);
+        double b1 = distance(b, c);
+//        List<List<Double>> res1 = new ArrayList<>();
+//        List<List<Double>> res2 = new ArrayList<>();
+//        res1.add(new ArrayList<>(Arrays.asList(a[0], a[1])));
+//        res1.add(new ArrayList<>(Arrays.asList(b[0], b[1])));
+//        res2.add(new ArrayList<>(Arrays.asList(b[0], b[1])));
+//        res2.add(new ArrayList<>(Arrays.asList(c[0], c[1])));
+
+//        HashMap<String, List<List<Double>>> lengthAndWidth = new HashMap<>();
+        HashMap<String, Double> lengthAndWidth = new HashMap<>();
+        if(a1 > b1){
+            lengthAndWidth.put("length", a1);
+            lengthAndWidth.put("width", b1);
+        } else {
+            lengthAndWidth.put("length", b1);
+            lengthAndWidth.put("width", a1);
+        }
+        return lengthAndWidth;
+    }
+
+
+    /**
+     * 将经纬度坐标转为投影坐标（具体的投影坐标系由给定数据确定）
+     * @param dataset   GDAL地理数据
+     * @param lon       地理坐标lon经度
+     * @param lat       地理坐标lat纬度
+     * @return          经纬度坐标(lon, lat)对应的投影坐标(projx, projy)
+     */
+    public static double[] lonLat2Geo(Dataset dataset, double lon, double lat){
+        SpatialReference prosrs = new SpatialReference(), geosrs = null;
+        prosrs.ImportFromWkt(dataset.GetProjectionRef());    // 投影参考系
+        geosrs = prosrs.CloneGeogCS();                       // 地理参考系
+        // 创建坐标映射对象
+        CoordinateTransformation ct = CoordinateTransformation.CreateCoordinateTransformation(geosrs, prosrs);
+        return ct.TransformPoint(lon, lat);
+    }
+
+    /**
+     * 获得给定数据的投影参考系和地理参考系
+     *
+     * @param dataset   GDAL地理数据
+     * @return          投影参考系和地理参考系
+     */
+    public static void getSRSPair(Dataset dataset, SpatialReference prosrs, SpatialReference geosrs){
+        prosrs.ImportFromWkt(dataset.GetProjectionRef());    // 投影参考系
+        geosrs = prosrs.CloneGeogCS();                       // 地理参考系
+    }
+
+    /**
+     * 根据GDAL的六参数模型将给定的投影或地理坐标转为影像图像坐标(x, y)
+     *
+     * @param dataset   GDAL地理数据
+     * @param px        投影projx或地理坐标lon
+     * @param py        投影projy或地理坐标lat
+     * @return          投影坐标或经纬度坐标对应的影像图像坐标(x, y)
+     */
+    public static Integer[] geo2imagexy(Dataset dataset, double px, double py){
+        double[] trans = dataset.GetGeoTransform();
+
+//        List<Double> oneTwo = new ArrayList<>(Arrays.asList());
+//        List<Double> fourFive = new ArrayList<>(Arrays.asList());
+//        List<List<Double>> a = new ArrayList<>(Arrays.asList(oneTwo, fourFive));  // y坐标是正值
+
+//        List<Double> b = new ArrayList<>(Arrays.asList(px - trans[0], py - trans[3]));
+        // 使用JAMA库的最小二乘法解线性方程组 a * x = b
+        Matrix a = new Matrix(new double[][]{{trans[1], trans[2]}, {trans[4], trans[5]}});
+        Matrix b = new Matrix(new double[][]{{px - trans[0]}, {py - trans[3]}});
+        Matrix x = a.solve(b);  // 2 * 1
+        // 返回列（2）
+        double[] resDouble = x.getRowPackedCopy();
+        // 转为整数
+        Integer[] resInt = new Integer[resDouble.length];
+        for(int i=0; i<resDouble.length; i++)
+            resInt[i] = (int) Math.round(resDouble[i]);
+        return resInt;
+    }
+
+    /**
+     * 用来计算两点之间实际距离
+     * @param point1    点1经纬度坐标数组 [longitude, latitude]
+     * @param point2    点2经纬度坐标数组
+     * @return          点1和点2的实际距离（米）
+     */
+    private static long distance(double[] point1, double[] point2) {
+        double lat1 = point1[1] * Math.PI / 180.0;
+        double lon1 = point1[0] * Math.PI / 180.0;
+        double lat2 = point2[1] * Math.PI / 180.0;
+        double lon2 = point2[0] * Math.PI / 180.0;
+
+        double vlon = Math.abs(lon2 - lon1);
+        double vlat = Math.abs(lat2 - lat1);
+
+        double h = Haversin(vlat) + Math.cos(lat1) * Math.cos(lat2) * Haversin(vlon);
+        double length = 2 * 6371008.8 * Math.sin(Math.sqrt(h));
+
+        return Math.round(length);
+    }
+
+    private static double Haversin(double theta){
+        double v = Math.sin(theta / 2);
+        return v * v;
+    }
 //
 //    @Test
 //    public  void test(){

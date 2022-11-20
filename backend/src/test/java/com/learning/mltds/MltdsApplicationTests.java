@@ -1,5 +1,6 @@
 package com.learning.mltds;
 
+import Jama.Matrix;
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.Driver;
 import org.gdal.gdal.gdal;
@@ -8,14 +9,40 @@ import org.gdal.osr.SpatialReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.*;
 
 @SpringBootTest
 class MltdsApplicationTests {
 
     @Test
     void contextLoads() {
+        Matrix a = new Matrix(new double[][] {{3., 2.}, {1., 1.}});
+        Matrix b = new Matrix(new double[][]{ {7.}, {3.}});
+
+        Matrix tes = a.solve(b);
+
+
+//        double[][] res =  tes.getArray();
+//        double[] res =  tes.getRowPackedCopy();
+        double[] resDouble = tes.getRowPackedCopy();
+        // 转为整数
+        Integer[] resInt = new Integer[resDouble.length];
+        for(int i=0; i<resDouble.length; i++)
+            resInt[i] = (int) Math.round(resDouble[i]);
+        List<Integer> bbox = new ArrayList<>();
+        bbox.addAll(Arrays.asList(resInt));
+        StringBuffer s = new StringBuffer();
+//        double d1 = (double) Math.round(d * 100) / 100;
+//        System.out.println(res[0][0]);
+//        System.out.println(res[1][0]);
+//        for(int i=0; i<res.length; i++){
+//            for(int j =0; j< res[i].length; j++){
+//                s.append(res[i][j] + ' ');
+//            }
+//            s.append('\n');
+//        }
+//        System.out.println(s.toString());
+
         // gdal工具初始化
         gdal.AllRegister();
 
