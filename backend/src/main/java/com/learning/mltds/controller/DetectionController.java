@@ -184,22 +184,21 @@ public class DetectionController {
                     mean_x = mean_x / (bbox.size()  / 2);
                     mean_y = mean_y / (bbox.size()  / 2);
 
-                    // TODO 保存图像切片，TIF —> JPG 功能待开发
+                    // 保存图像切片，包含 Tiff —> JPG 功能
                     String targetCropImgPath = (new File(slicePath, imageOnlyName + "_" + objIndex + "_labeled.jpg")).toString();
                     String areaCropImgPath = (new File(slicePath, imageOnlyName + "_" + objIndex + "_area_labeled.jpg")).toString();
                     // 裁剪目标框
-                    ImageUtils.imageCut(min_x, min_y, max_x - min_x, max_y - min_y, imagePath, targetCropImgPath);
+                    ImageUtils.tiffImageCut(dataset.getDataset(), targetCropImgPath,
+                            min_x, min_y, max_x - min_x, max_y - min_y);
                     // 裁剪目标框中心所在的边长是areaSize的矩形区域
-                    ImageUtils.imageCut(mean_x - CommonConfig.areaSize / 2, mean_y - CommonConfig.areaSize / 2,
-                            CommonConfig.areaSize, CommonConfig.areaSize, imagePath, areaCropImgPath);
-
+                    ImageUtils.tiffImageCut(dataset.getDataset(), areaCropImgPath,
+                            mean_x - CommonConfig.areaSize / 2, mean_y - CommonConfig.areaSize / 2, CommonConfig.areaSize, CommonConfig.areaSize);
 
                     objectinfoVO.setTargetSlicePath(targetCropImgPath);
                     objectinfoVO.setAreaSlicePath(areaCropImgPath);
                     objectinfoVO.setFixTargetSlicePath(targetCropImgPath);      // 没有修正后的目标切片，临时用target代替
                 }
                 // 保存数据 VO -> DO
-
                 objectinfoVO.setTaskId(currentTaskId);
                 objectinfoVO.setImageId(imageinfoId);
 

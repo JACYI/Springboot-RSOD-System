@@ -142,6 +142,33 @@
             <artifactId>jama</artifactId>
             <version>1.0.3</version>
         </dependency>
+        <!-- Tiff图像读取和转化为jpg依赖       -->
+        <!-- https://mvnrepository.com/artifact/javax.media/jai_core -->
+<!--        <dependency>-->
+<!--            <groupId>javax.media</groupId>-->
+<!--            <artifactId>jai_core</artifactId>-->
+<!--            <version>1.1.3</version>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.sun.media/jai-codec -->
+<!--        <dependency>-->
+<!--            <groupId>com.sun.media</groupId>-->
+<!--            <artifactId>jai-codec</artifactId>-->
+<!--            <version>1.1.3</version>-->
+<!--        </dependency>-->
+
+
+        <!--        <dependency>-->
+<!--            <groupId>commons-codec</groupId>-->
+<!--            <artifactId>commons-codec</artifactId>-->
+<!--            <version>1.3</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.jai-imageio</groupId>-->
+<!--            <artifactId>jai-imageio-core</artifactId>-->
+<!--            <version>1.4.0</version>-->
+<!--        </dependency>-->
+
+
 
 
 
@@ -165,8 +192,9 @@
         </plugins>
     </build>
 
-<!--    配置 阿里云仓库-->
+
     <repositories>
+        <!--    配置 阿里云仓库-->
         <repository>
             <id>nexus-aliyun</id>
             <name>nexus-aliyun</name>
@@ -178,6 +206,12 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+<!--        &lt;!&ndash; Cannot resolve com.sun.media:jai-codec:1.1.3 &ndash;&gt;-->
+<!--        <repository>-->
+<!--            <id>jboss-repository</id>-->
+<!--            <name>jboss-repository</name>-->
+<!--            <url>https://repository.jboss.org/maven2/</url>-->
+<!--        </repository>-->
     </repositories>
 
     <pluginRepositories>
