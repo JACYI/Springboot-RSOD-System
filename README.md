@@ -205,8 +205,6 @@ rabbitmqctl set_permissions -p vhost xxxxxx ".*" ".*" ".*"
 
 在 *Project Setting-Modules* 中选择项目的 *Dependencies* 添加gdal.jar。
 
-![image-20221114185539087](C:\Users\yiyonghao\AppData\Roaming\Typora\typora-user-images\image-20221114185539087.png)
-
 **配置实现函数的dll文件**
 
 将 *xxx\gdal\bin* 下的所有 *.dll* 文件，以及 *xxx\gdal\bin\gdal\java* 下的 *gdalalljni.dll* 文件复制到项目项目使用的JDK文件夹 *\\.jdks\corretto-1.8.0_342\jre\bin* 目录中。
